@@ -10,4 +10,5 @@ public interface IPacienteService {
     Optional<Paciente> buscarPacientePorNumDocumento(String numeroDocumento);
     Paciente guardarPaciente(Paciente paciente);
     Paciente actualizarPaciente(Paciente paciente);
+    Optional<Paciente> buscarPacientePorUsername(String username);
 }

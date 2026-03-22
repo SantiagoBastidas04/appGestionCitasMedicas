@@ -14,4 +14,6 @@ public interface PacienteRepository extends JpaRepository<Paciente, Long> {
     // Verificar si ya existe el documento
     boolean existsByNumeroDocumento(String numeroDocumento);
 
+    // Buscar paciente por nombre de usuario
+    Optional<Paciente> findByUsername(String username);
 }

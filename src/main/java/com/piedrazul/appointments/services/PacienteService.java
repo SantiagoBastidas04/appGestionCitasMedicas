@@ -46,4 +46,9 @@ public class PacienteService implements IPacienteService {
     public Paciente actualizarPaciente(Paciente paciente) {
         return pacienteRepository.save(paciente);
     }
+
+    @Override
+    public Optional<Paciente> buscarPacientePorUsername(String username) {
+        return pacienteRepository.findByUsername(username);
+    }
 }

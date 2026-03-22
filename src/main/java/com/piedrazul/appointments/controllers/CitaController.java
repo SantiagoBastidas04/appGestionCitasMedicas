@@ -5,6 +5,7 @@ import com.piedrazul.appointments.DTOs.request.ReAgendarCitaRequest;
 import com.piedrazul.appointments.DTOs.response.CitaResponse;
 import com.piedrazul.appointments.entities.*;
 import com.piedrazul.appointments.mappers.CitaMapper;
+import com.piedrazul.appointments.security.AuthUtils;
 import com.piedrazul.appointments.services.interfaces.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ public class CitaController {
     private final IMedicoTerapistaService medicoService;
     private final IUsuarioService usuarioService;
     private final CitaMapper citaMapper;
+    private final AuthUtils authUtils;
 
     @GetMapping("/medico/{medicoId}/fecha/{fecha}")
     public ResponseEntity<List<CitaResponse>> listarPorMedicoYFecha(
@@ -55,12 +57,15 @@ public class CitaController {
                         "Paciente no encontrado con id: " + request.getPacienteId()
                 ));
 
+        // Obtiene el usuario autenticado
+        Usuario registradoPor = authUtils.getUsuarioAutenticado();
+
         Cita cita = citaService.crearCita(
                 medico,
                 paciente,
                 request.getFecha(),
                 request.getHora(),
-                medico,
+                registradoPor,
                 request.getObservacion()
         );
 
@@ -73,10 +78,8 @@ public class CitaController {
             @PathVariable Long id,
             @Valid @RequestBody ReAgendarCitaRequest request) {
 
-        Usuario modificadoPor = usuarioService.buscarPorId(request.getModificadoPorId())
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "Usuario no encontrado con id: " + request.getModificadoPorId()
-                ));
+        //  Obtiene el usuario autenticado
+        Usuario modificadoPor = authUtils.getUsuarioAutenticado();
 
         Cita cita = citaService.reAgendarCita(
                 id,
@@ -87,6 +90,7 @@ public class CitaController {
 
         return ResponseEntity.ok(citaMapper.toResponse(cita));
     }
+
 
     @GetMapping("/{medicoId}/franjas")
     public ResponseEntity<List<LocalTime>> obtenerFranjasDisponibles(

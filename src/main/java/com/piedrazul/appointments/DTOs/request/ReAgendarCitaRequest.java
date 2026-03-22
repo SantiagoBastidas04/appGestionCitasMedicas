@@ -18,6 +18,4 @@ public class ReAgendarCitaRequest {
     @NotNull(message = "La nueva hora es obligatoria")
     private LocalTime nuevaHora;
 
-    @NotNull(message = "El id del usuario que reagenda es obligatorio")
-    private Long modificadoPorId;
 }
