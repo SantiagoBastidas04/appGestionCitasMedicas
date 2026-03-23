@@ -14,6 +14,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -26,11 +31,11 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
-                        //publicos
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
 
@@ -42,7 +47,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/api/pacientes/**")
                         .hasAnyRole("AGENDADOR", "ADMINISTRADOR")
 
-                        // Medicos
+                        // Médicos
                         .requestMatchers(HttpMethod.POST, "/api/medicos")
                         .hasRole("ADMINISTRADOR")
                         .requestMatchers(HttpMethod.PUT, "/api/medicos/**")
@@ -62,7 +67,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/citas/**")
                         .hasAnyRole("ADMINISTRADOR", "AGENDADOR")
 
-                        //Configuracion del sistema
+                        // Configuración
                         .requestMatchers("/api/configuracion/**")
                         .hasRole("ADMINISTRADOR")
 
@@ -76,7 +81,30 @@ public class SecurityConfig {
         return http.build();
     }
 
-    //hash a la contraseñas
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+
+        // Acepta CUALQUIER origen — útil en desarrollo
+        // En producción reemplazar por la URL real del frontend
+        config.addAllowedOriginPattern("*");
+
+        config.setAllowedMethods(List.of(
+                "GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"
+        ));
+
+        // Acepta todos los headers, incluyendo Authorization
+        config.addAllowedHeader("*");
+
+        config.setExposedHeaders(List.of("Authorization"));
+        config.setAllowCredentials(false);
+        config.setMaxAge(3600L);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
+    }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
