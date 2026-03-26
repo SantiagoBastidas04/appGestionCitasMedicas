@@ -1,0 +1,41 @@
+/* ═══════════════════════════════════════════
+   PIEDRAZUL — base.css
+   Reset, tipografía y estilos globales
+═══════════════════════════════════════════ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  line-height: 1.65;
+  background: var(--crema);
+  color: var(--texto);
+  min-height: 100vh;
+}
+button, input, select, textarea { font-family: inherit; font-size: inherit; }
+button { cursor: pointer; }
+a { color: var(--verde); text-decoration: none; }
+
+/* Layout principal */
+.contenido {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+}
+@media (max-width: 680px) {
+  .contenido { padding: 20px 16px 48px; }
+}
+
+/* Grillas de formulario */
+.form-grid   { display: grid; grid-template-columns: 1fr 1fr;     gap: 18px; }
+.form-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; }
+.form-full   { grid-column: 1 / -1; }
+@media (max-width: 680px) {
+  .form-grid, .form-grid-3 { grid-template-columns: 1fr; }
+}
+
+/* Animaciones */
+@keyframes fadeIn  { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes spin    { to { transform: rotate(360deg); } }
+@keyframes modalIn { from { opacity: 0; transform: scale(.95) translateY(8px); } to { opacity: 1; transform: scale(1) translateY(0); } }
