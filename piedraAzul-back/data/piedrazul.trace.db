@@ -26,3 +26,19 @@ The connection was not closed by the application and is garbage collected [90018
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Tabla "CMEDICOS_TERAPISTAS" no encontrada
 Table "CMEDICOS_TERAPISTAS" not found; SQL statement:
 SELECT * FROM CMEDICOS_TERAPISTAS ITA [42102-232]
+2026-03-25 19:14:25.765026-05:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Tabla "USERS" no encontrada
+Table "USERS" not found; SQL statement:
+select * from users [42102-232]
+2026-03-25 19:14:29.363207-05:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "select * from [*]user"; se esperaba "identifier"
+Syntax error in SQL statement "select * from [*]user"; expected "identifier"; SQL statement:
+select * from user [42001-232]
+2026-03-25 19:14:38.127782-05:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Tabla "USERS" no encontrada
+Table "USERS" not found; SQL statement:
+select * from users [42102-232]
+2026-03-26 02:02:08.885388-05:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Tabla "MEDICO_TERAPISTAS" no encontrada
+Table "MEDICO_TERAPISTAS" not found; SQL statement:
+select * from medico_terapistas [42102-232]

@@ -42,6 +42,8 @@ public class SecurityConfig {
                         // Pacientes
                         .requestMatchers(HttpMethod.POST, "/api/pacientes")
                         .hasAnyRole("AGENDADOR", "ADMINISTRADOR")
+                        .requestMatchers(HttpMethod.GET, "/api/pacientes/username/**")
+                        .hasAnyRole("AGENDADOR", "ADMINISTRADOR", "MEDICO_TERAPISTA", "PACIENTE")
                         .requestMatchers(HttpMethod.GET, "/api/pacientes/**")
                         .hasAnyRole("AGENDADOR", "ADMINISTRADOR", "MEDICO_TERAPISTA")
                         .requestMatchers(HttpMethod.PUT, "/api/pacientes/**")
@@ -66,7 +68,8 @@ public class SecurityConfig {
                         .hasAnyRole("ADMINISTRADOR", "AGENDADOR")
                         .requestMatchers(HttpMethod.DELETE, "/api/citas/**")
                         .hasAnyRole("ADMINISTRADOR", "AGENDADOR")
-
+                        .requestMatchers(HttpMethod.GET, "/api/citas/paciente/**")
+                        .hasAnyRole("ADMINISTRADOR", "AGENDADOR", "MEDICO_TERAPISTA", "PACIENTE")
                         // Configuración
                         .requestMatchers("/api/configuracion/**")
                         .hasRole("ADMINISTRADOR")

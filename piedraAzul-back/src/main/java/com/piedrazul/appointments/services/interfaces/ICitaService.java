@@ -11,6 +11,8 @@ import java.util.*;
 public interface ICitaService {
     List<Cita> listarCitasPorMedicoYFecha(Long medicoId, LocalDate fecha);
 
+    List<Cita> listarCitasPorPaciente(Long pacienteId);
+
     Cita crearCita(MedicoTerapista medico, Paciente paciente, LocalDate fecha, LocalTime hora, Usuario registradoPor, String observacion);
 
     Cita reAgendarCita(Long citaId, LocalDate nuevaFecha, LocalTime nuevaHora, Usuario modificadoPor);

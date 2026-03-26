@@ -5,10 +5,12 @@
 
 import { ref, computed } from 'vue'
 
-const usuario  = ref(null)   // { username, nombres, apellidos, rol, id }
-const sesionActiva = computed(() => !!usuario.value)
+const usuario = ref(null)
+// usuario tiene forma: { token, username, rol, nombres, apellidos }
 
-// ── Servicios de auth (apuntan a Spring Boot) ──
+const sesionActiva = computed(() => !!usuario.value)
+const esPaciente   = computed(() => usuario.value?.rol === 'PACIENTE')
+
 const API = 'http://localhost:8080/api'
 
 async function http(url, opts = {}) {
@@ -27,21 +29,22 @@ async function http(url, opts = {}) {
 export function useAuth() {
 
   async function login(username, password) {
+    // LoginResponse: { token, username, rol, nombres, apellidos }
     const data = await http('/auth/login', {
       method: 'POST',
       body: JSON.stringify({ username, password }),
     })
-    // Se espera: { id, username, nombres, apellidos, rol }
     usuario.value = data
   }
 
   async function registro(form) {
-    // Solo pacientes se auto-registran
-    const data = await http('/auth/registro', {
+    // Registro devuelve PacienteResponse (sin token), así que hacemos login después
+    await http('/auth/registro', {
       method: 'POST',
       body: JSON.stringify(form),
     })
-    usuario.value = data
+    // Login automático tras registro exitoso
+    await login(form.username, form.password)
   }
 
   function cerrarSesion() {
@@ -62,10 +65,10 @@ export function useAuth() {
 
   const rolLabel = computed(() => {
     const ROLES = {
-      ADMIN:      'Administrador',
-      MEDICO:     'Médico',
-      AGENDADOR:  'Agendador',
-      PACIENTE:   'Paciente',
+      ADMINISTRADOR:    'Administrador',
+      MEDICO_TERAPISTA: 'Médico',
+      AGENDADOR:        'Agendador',
+      PACIENTE:         'Paciente',
     }
     return ROLES[usuario.value?.rol] || usuario.value?.rol || ''
   })
@@ -73,6 +76,7 @@ export function useAuth() {
   return {
     usuario,
     sesionActiva,
+    esPaciente,
     avatarLetra,
     nombreCompleto,
     rolLabel,

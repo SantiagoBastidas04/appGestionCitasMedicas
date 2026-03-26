@@ -4,32 +4,41 @@
 ═══════════════════════════════════════════ */
 
 :root {
-  --verde:          #0D6B4E;
-  --verde-oscuro:   #084D38;
-  --verde-claro:    #E8F5F0;
-  --verde-medio:    #1A9B6F;
-  --verde-borde:    #A8D9C8;
+  --verde:          #1A5FA0;  /* ahora azul principal */
+  --verde-oscuro:   #154360;
+  --verde-claro:    #EBF5FB;
+  --verde-medio:    #2E86C1;
+  --verde-borde:    #AED6F1;
+
   --crema:          #FAF8F4;
   --crema-oscuro:   #F0EDE6;
   --blanco:         #FFFFFF;
+
   --texto:          #1C1F1E;
   --texto-suave:    #4A5550;
   --texto-tenue:    #8A9894;
+
   --borde:          #DDE4E0;
   --borde-fuerte:   #B8C8C0;
+
   --rojo:           #B03030;
   --rojo-claro:     #FDF0F0;
   --rojo-borde:     #E8AAAA;
+
   --amarillo:       #7A5A10;
   --amarillo-claro: #FFFBF0;
   --amarillo-borde: #E8D080;
+
   --azul:           #1A5FA0;
   --azul-claro:     #EEF5FC;
+
   --radio-sm:       6px;
   --radio-md:       10px;
   --radio-lg:       16px;
   --radio-xl:       24px;
-  --sombra-sm:      0 1px 4px rgba(13,107,78,.08);
-  --sombra-md:      0 4px 16px rgba(13,107,78,.10);
+
+  --sombra-sm:      0 1px 4px rgba(26,95,160,.08);
+  --sombra-md:      0 4px 16px rgba(26,95,160,.10);
+
   --trans:          .18s ease;
 }

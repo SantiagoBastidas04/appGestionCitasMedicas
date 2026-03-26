@@ -56,6 +56,6 @@ const fechaFormato = computed(() => {
   border-bottom: 1px solid var(--verde-borde);
 }
 .resumen-fila:last-child { border-bottom: none; }
-.resumen-fila .et  { color: #2A6E58; }
+.resumen-fila .et  { color: var(--texto-suave); }
 .resumen-fila .val { font-weight: 600; color: var(--verde-oscuro); }
 </style>

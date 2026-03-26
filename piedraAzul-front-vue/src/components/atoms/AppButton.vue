@@ -4,21 +4,25 @@
     :disabled="loading || disabled"
     @click="$emit('click')"
   >
-    <span v-if="loading" class="spinner" :class="{ 'spinner-verde': variante !== 'primario' }"></span>
+    <span 
+      v-if="loading" 
+      class="spinner" 
+      :class="{ 'spinner-verde': variante !== 'primario' }"
+    ></span>
     <slot />
   </button>
 </template>
 
 <script setup>
 defineProps({
-  variante: { type: String, default: 'primario' }, // primario | contorno | peligro
+  variante: { type: String, default: 'primario' },
   loading:  { type: Boolean, default: false },
   disabled: { type: Boolean, default: false },
   small:    { type: Boolean, default: false },
 })
+
 defineEmits(['click'])
 </script>
-
 <style scoped>
 .btn {
   display: inline-flex;
@@ -33,6 +37,7 @@ defineEmits(['click'])
   letter-spacing: .01em;
   white-space: nowrap;
 }
+
 .btn:active { transform: scale(.975); }
 .btn:disabled { opacity: .5; cursor: not-allowed; pointer-events: none; }
 
@@ -40,25 +45,38 @@ defineEmits(['click'])
   background: var(--verde);
   color: var(--blanco);
   border-color: var(--verde);
-  box-shadow: 0 2px 8px rgba(13,107,78,.25);
+  box-shadow: 0 2px 8px rgba(26,95,160,.25); /* azul */
 }
-.btn-primario:hover { background: var(--verde-oscuro); border-color: var(--verde-oscuro); box-shadow: 0 4px 14px rgba(13,107,78,.30); }
+
+.btn-primario:hover {
+  background: var(--verde-oscuro);
+  border-color: var(--verde-oscuro);
+  box-shadow: 0 4px 14px rgba(26,95,160,.30); /* azul */
+}
 
 .btn-contorno {
   background: transparent;
   color: var(--verde);
   border-color: var(--verde-borde);
 }
-.btn-contorno:hover { background: var(--verde-claro); border-color: var(--verde-medio); }
+
+.btn-contorno:hover {
+  background: var(--verde-claro);
+  border-color: var(--verde-medio);
+}
 
 .btn-peligro {
   background: var(--rojo-claro);
   color: var(--rojo);
   border-color: var(--rojo-borde);
 }
-.btn-peligro:hover { background: #fae0e0; }
+
+.btn-peligro:hover {
+  background: #fae0e0;
+}
 
 .btn-sm { padding: 7px 16px; font-size: 13px; }
+
 
 .spinner {
   display: inline-block;
@@ -70,8 +88,11 @@ defineEmits(['click'])
   flex-shrink: 0;
 }
 .spinner-verde {
-  border-color: rgba(13,107,78,.2);
+  border-color: rgba(26,95,160,.2); 
   border-top-color: var(--verde);
 }
-@keyframes spin { to { transform: rotate(360deg); } }
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
 </style>

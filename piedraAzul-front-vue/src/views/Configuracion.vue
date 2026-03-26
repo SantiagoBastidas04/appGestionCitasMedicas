@@ -7,22 +7,6 @@
       </div>
     </div>
 
-    <AppAlerta tipo="aviso" titulo="Solo administradores">
-      Requiere autenticación con perfil administrador. Se implementa en la próxima iteración.
-    </AppAlerta>
-
-    <!-- Ventana global -->
-    <AppCard titulo="Ventana global de agendamiento" subtitulo="Cuántas semanas hacia adelante se habilitarán las citas">
-      <template #icono>
-        <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-      </template>
-      <div class="form-grid-3">
-        <AppCampo label="Semanas habilitadas" tipo="number" v-model="semanas" ayuda="Rango: 1 a 12 semanas" />
-      </div>
-      <div class="btn-fila">
-        <AppButton @click="guardarSemanas">Guardar</AppButton>
-      </div>
-    </AppCard>
 
     <!-- Configurar médico -->
     <AppCard titulo="Configurar profesional" subtitulo="Defina horario, días e intervalo entre citas">
@@ -45,7 +29,7 @@
         </div>
       </div>
       <div class="btn-fila">
-        <AppButton @click="guardarConfig">Guardar configuración</AppButton>
+        <AppButton @click="guardarConfig" :loading="guardandoConfig">Guardar configuración</AppButton>
         <AppButton variante="contorno" @click="cargarConfig">Descartar cambios</AppButton>
       </div>
     </AppCard>
@@ -100,17 +84,19 @@ import AppButton    from '../components/atoms/AppButton.vue'
 import AppAlerta    from '../components/atoms/AppAlerta.vue'
 import AppBadge     from '../components/atoms/AppBadge.vue'
 import DiasSelector from '../components/molecules/DiasSelector.vue'
-import { useMedicos }   from '../composables/useMedicos.js'
-import { useToast }     from '../composables/useToast.js'
-import { medicoService } from '../services/api.js'
+import { useMedicos }          from '../composables/useMedicos.js'
+import { useToast }            from '../composables/useToast.js'
+import { configuracionService } from '../services/api.js'
+import { medicoService }        from '../services/api.js'
 
 defineEmits(['abrir-modal'])
 
 const { medicos, formatEsp, cargarMedicos } = useMedicos()
 const { toast } = useToast()
 
-const semanas      = ref(4)
+const semanas        = ref(4)
 const configMedicoId = ref('')
+const guardandoConfig = ref(false)
 const config = reactive({ intervalo: 30, inicio: '08:00', fin: '17:00', dias: ['MONDAY','TUESDAY','WEDNESDAY','FRIDAY'] })
 
 function guardarSemanas() {
@@ -124,14 +110,45 @@ async function cargarConfig() {
     config.intervalo = m.intervaloCitas
     config.inicio    = m.horaInicio
     config.fin       = m.horaFin
-    config.dias      = m.diasAtencion || []
+    config.dias      = m.diasAtencion ? [...m.diasAtencion] : []
   } catch (e) {
     toast('Error cargando configuración: ' + e.message, 'err')
   }
 }
 
-function guardarConfig() {
-  toast('Para habilitar esta función agrega PUT /api/medicos/{id} al backend')
+async function guardarConfig() {
+  if (!configMedicoId.value) {
+    toast('Seleccione un profesional primero', 'err')
+    return
+  }
+  if (!config.dias.length) {
+    toast('Debe seleccionar al menos un día de atención', 'err')
+    return
+  }
+  if (parseInt(config.intervalo) < 5) {
+    toast('El intervalo mínimo es 5 minutos', 'err')
+    return
+  }
+  if (config.inicio >= config.fin) {
+    toast('La hora de inicio debe ser anterior a la hora de fin', 'err')
+    return
+  }
+
+  guardandoConfig.value = true
+  try {
+    await configuracionService.setMedico(configMedicoId.value, {
+      horaInicio:    config.inicio,
+      horaFin:       config.fin,
+      intervaloCitas: parseInt(config.intervalo),
+      diasAtencion:  config.dias,
+    })
+    toast('Configuración guardada correctamente')
+    cargarMedicos()
+  } catch (e) {
+    toast('Error guardando configuración: ' + e.message, 'err')
+  } finally {
+    guardandoConfig.value = false
+  }
 }
 
 async function toggleMedico(id, activo) {

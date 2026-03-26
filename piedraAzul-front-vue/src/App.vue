@@ -1,19 +1,24 @@
 <template>
-  <!-- ── PANTALLA LOGIN (sin sesión) ── -->
+  <!-- ── SIN SESIÓN: login ── -->
   <LoginView v-if="!sesionActiva" />
 
-  <!-- ── APP PRINCIPAL (con sesión) ── -->
+  <!-- ── PACIENTE: solo portal ── -->
+  <template v-else-if="esPaciente">
+    <AppTopbar />
+    <main class="contenido">
+      <PortalPaciente />
+    </main>
+  </template>
+
+  <!-- ── ADMIN / AGENDADOR / MÉDICO: app completa ── -->
   <template v-else>
     <AppTopbar />
-    <AppNavTabs :activo="seccion" :tabs="TABS" @cambiar="seccion = $event" />
-
+    <AppNavTabs :activo="seccion" :tabs="tabsFiltradas" @cambiar="seccion = $event" />
     <main class="contenido">
-      <ListarCitas    v-show="seccion === 'listar'"   ref="listarRef" />
-      <CrearCita      v-show="seccion === 'crear'"     @cita-creada="onCitaCreada" />
-      <PortalPaciente v-show="seccion === 'paciente'" />
-      <Configuracion  v-show="seccion === 'admin'"    @abrir-modal="modalVisible = true" />
+      <ListarCitas   v-show="seccion === 'listar'"  ref="listarRef" />
+      <CrearCita     v-show="seccion === 'crear'"    @cita-creada="onCitaCreada" />
+      <Configuracion v-show="seccion === 'admin'"   @abrir-modal="modalVisible = true" />
     </main>
-
     <ModalMedico
       :visible="modalVisible"
       @cerrar="modalVisible = false"
@@ -25,7 +30,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import AppTopbar      from './components/organisms/AppTopbar.vue'
 import AppNavTabs     from './components/organisms/AppNavTabs.vue'
 import AppToast       from './components/organisms/AppToast.vue'
@@ -39,34 +44,42 @@ import { useMedicos } from './composables/useMedicos.js'
 import { useAuth }    from './composables/useAuth.js'
 
 const { cargarMedicos } = useMedicos()
-const { sesionActiva }  = useAuth()
+const { sesionActiva, esPaciente, usuario } = useAuth()
 
 const seccion      = ref('listar')
 const modalVisible = ref(false)
 const listarRef    = ref(null)
 
-const TABS = [
+const TODAS_LAS_TABS = [
   {
-    id: 'listar', label: 'Consultar citas',
+    id: 'listar', label: 'Consultar citas', roles: ['ADMINISTRADOR', 'AGENDADOR', 'MEDICO_TERAPISTA'],
     icono: '<path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="3" width="6" height="4" rx="1" stroke="currentColor" stroke-width="1.5"/><path d="M9 12h6M9 16h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>',
   },
   {
-    id: 'crear', label: 'Nueva cita',
+    id: 'crear', label: 'Nueva cita', roles: ['ADMINISTRADOR', 'AGENDADOR'],
     icono: '<circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M12 8v8M8 12h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>',
   },
   {
-    id: 'paciente', label: 'Portal paciente', proto: true,
-    icono: '<circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>',
-  },
-  {
-    id: 'admin', label: 'Configuración', proto: true,
+    id: 'admin', label: 'Configuración', roles: ['ADMINISTRADOR'],
     icono: '<circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>',
   },
 ]
 
-// Cargar médicos cuando inicia sesión
+// Filtrar tabs según el rol del usuario
+const tabsFiltradas = computed(() => {
+  const rol = usuario.value?.rol || ''
+  return TODAS_LAS_TABS.filter(t => t.roles.includes(rol))
+})
+
+// Cuando cambia el usuario o las tabs, asegurar que la sección activa sea válida
+watch(tabsFiltradas, (tabs) => {
+  if (tabs.length && !tabs.find(t => t.id === seccion.value)) {
+    seccion.value = tabs[0].id
+  }
+})
+
 watch(sesionActiva, (activa) => {
-  if (activa) cargarMedicos()
+  if (activa && !esPaciente.value) cargarMedicos()
 })
 
 async function onCitaCreada({ medicoId, fecha }) {
@@ -84,6 +97,6 @@ function onMedicoGuardado() {
 }
 
 onMounted(() => {
-  if (sesionActiva.value) cargarMedicos()
+  if (sesionActiva.value && !esPaciente.value) cargarMedicos()
 })
 </script>

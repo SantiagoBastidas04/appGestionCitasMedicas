@@ -34,15 +34,18 @@ async function http(url, opts = {}) {
 
 // ── Médicos ──────────────────────────────
 export const medicoService = {
-  getAll:       ()           => http('/medicos'),
-  getById:      (id)         => http(`/medicos/${id}`),
-  create:       (body)       => http('/medicos', { method: 'POST', body: JSON.stringify(body) }),
-  toggleEstado: (id, activo) => http(`/medicos/${id}/estado?activo=${activo}`, { method: 'PUT' }),
+  getAll:           ()               => http('/medicos'),
+  getById:          (id)             => http(`/medicos/${id}`),
+  getByEspecialidad:(especialidad)   => http(`/medicos/especialidad/${especialidad}`),
+  create:           (body)           => http('/medicos', { method: 'POST', body: JSON.stringify(body) }),
+  update:           (id, body)       => http(`/medicos/${id}`, { method: 'PUT', body: JSON.stringify(body) }),
+  toggleEstado:     (id, activo)     => http(`/medicos/${id}/estado?activo=${activo}`, { method: 'PUT' }),
 }
 
 // ── Pacientes ────────────────────────────
 export const pacienteService = {
   getByDocumento: (doc)      => http(`/pacientes/documento/${doc}`),
+  getByUsername:  (username) => http(`/pacientes/username/${username}`),
   create:         (body)     => http('/pacientes', { method: 'POST', body: JSON.stringify(body) }),
   update:         (id, body) => http(`/pacientes/${id}`, { method: 'PUT', body: JSON.stringify(body) }),
 }
@@ -50,6 +53,7 @@ export const pacienteService = {
 // ── Citas ────────────────────────────────
 export const citaService = {
   getByMedicoFecha: (medicoId, fecha) => http(`/citas/medico/${medicoId}/fecha/${fecha}`),
+  getByPaciente:    (pacienteId)      => http(`/citas/paciente/${pacienteId}`),
   getFranjas:       (medicoId, fecha) => http(`/citas/${medicoId}/franjas?fecha=${fecha}`),
   create:           (body)            => http('/citas', { method: 'POST', body: JSON.stringify(body) }),
   reagendar:        (id, body)        => http(`/citas/${id}/reagendar`, { method: 'PUT', body: JSON.stringify(body) }),
