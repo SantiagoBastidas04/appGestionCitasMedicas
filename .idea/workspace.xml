@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="6aad22e7-9e5a-476e-bc3e-55c613f8faea" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/piedraAzul-back.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/piedraAzul-front-vue.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/piedraAzul-front-vue/src/assets/styles/tokens.css" beforeDir="false" afterPath="$PROJECT_DIR$/piedraAzul-front-vue/src/assets/styles/tokens.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/piedraAzul-front-vue/src/components/atoms/AppAlerta.vue" beforeDir="false" afterPath="$PROJECT_DIR$/piedraAzul-front-vue/src/components/atoms/AppAlerta.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/piedraAzul-front-vue/src/components/atoms/AppBadge.vue" beforeDir="false" afterPath="$PROJECT_DIR$/piedraAzul-front-vue/src/components/atoms/AppBadge.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/piedraAzul-front-vue/src/components/atoms/AppButton.vue" beforeDir="false" afterPath="$PROJECT_DIR$/piedraAzul-front-vue/src/components/atoms/AppButton.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/piedraAzul-front-vue/src/components/molecules/FranjasHorarias.vue" beforeDir="false" afterPath="$PROJECT_DIR$/piedraAzul-front-vue/src/components/molecules/FranjasHorarias.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/piedraAzul-front-vue/src/components/molecules/ResumenCita.vue" beforeDir="false" afterPath="$PROJECT_DIR$/piedraAzul-front-vue/src/components/molecules/ResumenCita.vue" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
+  <component name="ProjectId" id="3BRlJpRID87Zzloi6ycc8ekaALA" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.go.formatter.settings.were.checked": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "Spring Boot.AppointmentsApplication.executor": "Run",
+    "git-widget-placeholder": "rama__sofiaGlenn",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/IngSis/Ingenieria de Software 3/piedraAzul/PIEDRA-AZUL---SWIII-",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration name="AppointmentsApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.piedrazul.appointments.AppointmentsApplication" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.piedrazul.appointments.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Spring Boot.AppointmentsApplication" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-cffe25b9f5b3-intellij.indexing.shared.core-IU-253.28294.334" />
+        <option value="bundled-js-predefined-d6986cc7102b-c7e53b3be11b-JavaScript-IU-253.28294.334" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="6aad22e7-9e5a-476e-bc3e-55c613f8faea" name="Changes" comment="" />
+      <created>1774459699269</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1774459699269</updated>
+      <workItem from="1774459710641" duration="1391000" />
+      <workItem from="1774496361149" duration="692000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

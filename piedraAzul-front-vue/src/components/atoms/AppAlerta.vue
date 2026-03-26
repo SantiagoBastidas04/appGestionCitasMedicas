@@ -38,7 +38,7 @@ const icono = computed(() => {
 .alerta strong { display: block; font-size: 14px; margin-bottom: 2px; }
 .alerta span   { font-size: 13px; line-height: 1.5; }
 
-.alerta-info  { background: var(--verde-claro); color: #084D38; border-color: var(--verde-borde); }
+.alerta-info  { background: var(--verde-claro); color: #154360;border-color: var(--verde-borde); }
 .alerta-aviso { background: var(--amarillo-claro); color: var(--amarillo); border-color: var(--amarillo-borde); }
 .alerta-error { background: var(--rojo-claro); color: var(--rojo); border-color: var(--rojo-borde); }
 </style>

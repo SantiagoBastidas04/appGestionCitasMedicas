@@ -18,9 +18,28 @@ defineProps({
   font-weight: 600;
   letter-spacing: .02em;
 }
-.badge-CONFIRMADA { background: #E0F4EC; color: #0D6B4E; }
-.badge-CANCELADA  { background: var(--rojo-claro); color: var(--rojo); }
-.badge-COMPLETADA { background: var(--azul-claro); color: var(--azul); }
-.badge-activo     { background: #E0F4EC; color: #0D6B4E; }
-.badge-inactivo   { background: var(--crema-oscuro); color: var(--texto-tenue); }
+.badge-CONFIRMADA { 
+  background: var(--verde-claro); 
+  color: var(--verde); 
+}
+
+.badge-CANCELADA  { 
+  background: var(--rojo-claro); 
+  color: var(--rojo); 
+}
+
+.badge-COMPLETADA { 
+  background: var(--azul-claro); 
+  color: var(--azul); 
+}
+
+.badge-activo { 
+  background: var(--verde-claro); 
+  color: var(--verde); 
+}
+
+.badge-inactivo { 
+  background: var(--crema-oscuro); 
+  color: var(--texto-tenue); 
+}
 </style>

@@ -94,12 +94,13 @@ watch([() => props.medicoId, () => props.fecha], async ([mId, f]) => {
   background: var(--verde-claro);
   color: var(--verde-oscuro);
   transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(13,107,78,.12);
+  box-shadow: 0 2px 8px rgba(26,95,160,.12); 
 }
+
 .franja.sel {
   border-color: var(--verde);
   background: var(--verde);
   color: var(--blanco);
-  box-shadow: 0 2px 10px rgba(13,107,78,.30);
+  box-shadow: 0 2px 10px rgba(26,95,160,.30);
 }
 </style>
