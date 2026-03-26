@@ -42,7 +42,15 @@ public class CitaController {
 
         return ResponseEntity.ok(citas);
     }
-
+    @GetMapping("/paciente/{pacienteId}")
+    public ResponseEntity<List<CitaResponse>> listarPorPaciente(
+            @PathVariable Long pacienteId) {
+        List<CitaResponse> citas = citaService.listarCitasPorPaciente(pacienteId)
+                .stream()
+                .map(citaMapper::toResponse)
+                .toList();
+        return ResponseEntity.ok(citas);
+    }
     @PostMapping
     public ResponseEntity<CitaResponse> crearCita(
             @Valid @RequestBody CitaRequest request) {

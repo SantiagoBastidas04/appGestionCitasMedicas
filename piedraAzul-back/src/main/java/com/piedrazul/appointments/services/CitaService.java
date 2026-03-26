@@ -28,7 +28,10 @@ public class CitaService implements ICitaService {
         MedicoTerapista medico = medicoTerapistaRepository.findById(medicoId).orElseThrow(() -> new RuntimeException("Medico no encontrado con el id: " + medicoId));
         return citaRepository.findByMedicoAndFechaAndEstadoNot(medico, fecha, EstadoCita.CANCELADA);
     }
-
+    @Override
+    public List<Cita> listarCitasPorPaciente(Long pacienteId) {
+        return citaRepository.findByPacienteId(pacienteId);
+    }
     @Override
     @Transactional
     public Cita crearCita(MedicoTerapista medico, Paciente paciente, LocalDate fecha, LocalTime hora, Usuario registradoPor, String observacion) {

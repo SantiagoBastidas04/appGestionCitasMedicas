@@ -16,9 +16,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CitaRepository extends JpaRepository<Cita, Long> {
 
-    //  Listar citas de un medico en una fecha determinada
+    //  Listar citas de un médico en una fecha determinada
     List<Cita> findByMedicoAndFechaAndEstadoNot(MedicoTerapista medico, LocalDate fecha, EstadoCita estadoExcluido);
-
+    List<Cita> findByPacienteId(Long pacienteId);
     //  Verificar si ya existe una cita en esa hora
     boolean existsByMedicoAndFechaAndHoraAndEstadoNot(MedicoTerapista medico, LocalDate fecha, LocalTime hora, EstadoCita estadoExcluido);
 

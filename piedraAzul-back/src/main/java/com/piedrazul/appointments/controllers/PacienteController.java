@@ -46,6 +46,14 @@ public class PacienteController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+    @GetMapping("/username/{username}")
+    public ResponseEntity<PacienteResponse> buscarPorUsername(
+            @PathVariable String username) {
+        return pacienteService.buscarPacientePorUsername(username)
+                .map(pacienteMapper::toResponse)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 
     @PostMapping
     public ResponseEntity<PacienteResponse> crearPaciente(

@@ -7,9 +7,6 @@
       </div>
     </div>
 
-    <AppAlerta tipo="info" titulo="Agendamiento por WhatsApp">
-      Si el paciente ya está en el sistema, búsquelo por documento para cargar sus datos automáticamente
-    </AppAlerta>
 
     <!-- Buscar paciente -->
     <AppCard titulo="Buscar paciente existente" subtitulo="Si ya está registrado, sus datos se cargarán automáticamente">
