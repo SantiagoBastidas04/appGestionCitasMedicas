@@ -4,13 +4,26 @@
    Spring Boot en localhost:8080
 ═══════════════════════════════════════════ */
 
+import { useAuth } from '../composables/useAuth.js'
+
 const API = 'http://localhost:8080/api'
 
+function getToken() {
+  const { usuario } = useAuth()
+  return usuario.value?.token || null
+}
+
 async function http(url, opts = {}) {
-  const res = await fetch(API + url, {
-    headers: { 'Content-Type': 'application/json', ...(opts.headers || {}) },
-    ...opts,
-  })
+  const token = getToken()
+
+  const headers = {
+    'Content-Type': 'application/json',
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    ...(opts.headers || {}),
+  }
+
+  const res = await fetch(API + url, { ...opts, headers })
+
   if (!res.ok) {
     const txt = await res.text().catch(() => '')
     throw new Error(txt || `Error ${res.status}`)
@@ -29,8 +42,9 @@ export const medicoService = {
 
 // ── Pacientes ────────────────────────────
 export const pacienteService = {
-  getByDocumento: (doc)  => http(`/pacientes/documento/${doc}`),
-  create:         (body) => http('/pacientes', { method: 'POST', body: JSON.stringify(body) }),
+  getByDocumento: (doc)      => http(`/pacientes/documento/${doc}`),
+  create:         (body)     => http('/pacientes', { method: 'POST', body: JSON.stringify(body) }),
+  update:         (id, body) => http(`/pacientes/${id}`, { method: 'PUT', body: JSON.stringify(body) }),
 }
 
 // ── Citas ────────────────────────────────
@@ -38,5 +52,13 @@ export const citaService = {
   getByMedicoFecha: (medicoId, fecha) => http(`/citas/medico/${medicoId}/fecha/${fecha}`),
   getFranjas:       (medicoId, fecha) => http(`/citas/${medicoId}/franjas?fecha=${fecha}`),
   create:           (body)            => http('/citas', { method: 'POST', body: JSON.stringify(body) }),
+  reagendar:        (id, body)        => http(`/citas/${id}/reagendar`, { method: 'PUT', body: JSON.stringify(body) }),
   cancel:           (id)              => http(`/citas/${id}`, { method: 'DELETE' }),
+}
+
+// ── Configuración ─────────────────────────
+export const configuracionService = {
+  get:        ()         => http('/configuracion'),
+  setVentana: (semanas)  => http('/configuracion/ventana', { method: 'PUT', body: JSON.stringify({ ventanaSemanas: semanas }) }),
+  setMedico:  (id, body) => http(`/configuracion/medico/${id}`, { method: 'PUT', body: JSON.stringify(body) }),
 }

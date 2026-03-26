@@ -1,37 +1,45 @@
 <template>
-  <AppTopbar />
+  <!-- ── PANTALLA LOGIN (sin sesión) ── -->
+  <LoginView v-if="!sesionActiva" />
 
-  <AppNavTabs :activo="seccion" :tabs="TABS" @cambiar="seccion = $event" />
+  <!-- ── APP PRINCIPAL (con sesión) ── -->
+  <template v-else>
+    <AppTopbar />
+    <AppNavTabs :activo="seccion" :tabs="TABS" @cambiar="seccion = $event" />
 
-  <main class="contenido">
-    <ListarCitas  v-show="seccion === 'listar'"   ref="listarRef" />
-    <CrearCita    v-show="seccion === 'crear'"     @cita-creada="onCitaCreada" />
-    <PortalPaciente v-show="seccion === 'paciente'" />
-    <Configuracion  v-show="seccion === 'admin'"   @abrir-modal="modalVisible = true" />
-  </main>
+    <main class="contenido">
+      <ListarCitas    v-show="seccion === 'listar'"   ref="listarRef" />
+      <CrearCita      v-show="seccion === 'crear'"     @cita-creada="onCitaCreada" />
+      <PortalPaciente v-show="seccion === 'paciente'" />
+      <Configuracion  v-show="seccion === 'admin'"    @abrir-modal="modalVisible = true" />
+    </main>
 
-  <ModalMedico
-    :visible="modalVisible"
-    @cerrar="modalVisible = false"
-    @guardado="onMedicoGuardado"
-  />
+    <ModalMedico
+      :visible="modalVisible"
+      @cerrar="modalVisible = false"
+      @guardado="onMedicoGuardado"
+    />
+  </template>
 
   <AppToast />
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import AppTopbar     from './components/organisms/AppTopbar.vue'
-import AppNavTabs    from './components/organisms/AppNavTabs.vue'
-import AppToast      from './components/organisms/AppToast.vue'
-import ModalMedico   from './components/organisms/ModalMedico.vue'
-import ListarCitas   from './views/ListarCitas.vue'
-import CrearCita     from './views/CrearCita.vue'
+import { ref, onMounted, watch } from 'vue'
+import AppTopbar      from './components/organisms/AppTopbar.vue'
+import AppNavTabs     from './components/organisms/AppNavTabs.vue'
+import AppToast       from './components/organisms/AppToast.vue'
+import ModalMedico    from './components/organisms/ModalMedico.vue'
+import LoginView      from './views/LoginView.vue'
+import ListarCitas    from './views/ListarCitas.vue'
+import CrearCita      from './views/CrearCita.vue'
 import PortalPaciente from './views/PortalPaciente.vue'
-import Configuracion from './views/Configuracion.vue'
+import Configuracion  from './views/Configuracion.vue'
 import { useMedicos } from './composables/useMedicos.js'
+import { useAuth }    from './composables/useAuth.js'
 
 const { cargarMedicos } = useMedicos()
+const { sesionActiva }  = useAuth()
 
 const seccion      = ref('listar')
 const modalVisible = ref(false)
@@ -56,10 +64,14 @@ const TABS = [
   },
 ]
 
-// Al crear una cita, ir a listar y pre-cargar resultados
+// Cargar médicos cuando inicia sesión
+watch(sesionActiva, (activa) => {
+  if (activa) cargarMedicos()
+})
+
 async function onCitaCreada({ medicoId, fecha }) {
   seccion.value = 'listar'
-  await new Promise(r => setTimeout(r, 50)) // esperar render
+  await new Promise(r => setTimeout(r, 50))
   if (listarRef.value) {
     listarRef.value.medicoId = String(medicoId)
     listarRef.value.fecha    = fecha
@@ -72,6 +84,6 @@ function onMedicoGuardado() {
 }
 
 onMounted(() => {
-  cargarMedicos()
+  if (sesionActiva.value) cargarMedicos()
 })
 </script>

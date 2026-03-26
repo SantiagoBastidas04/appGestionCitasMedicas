@@ -22,3 +22,7 @@ The connection was not closed by the application and is garbage collected [90018
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:690)
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
 	... 16 more
+2026-03-25 18:14:19.079567-05:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Tabla "CMEDICOS_TERAPISTAS" no encontrada
+Table "CMEDICOS_TERAPISTAS" not found; SQL statement:
+SELECT * FROM CMEDICOS_TERAPISTAS ITA [42102-232]
