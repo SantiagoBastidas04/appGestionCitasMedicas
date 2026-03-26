@@ -4,16 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6aad22e7-9e5a-476e-bc3e-55c613f8faea" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/piedraAzul-back.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/piedraAzul-front-vue.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/piedraAzul-front-vue/src/assets/styles/tokens.css" beforeDir="false" afterPath="$PROJECT_DIR$/piedraAzul-front-vue/src/assets/styles/tokens.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/piedraAzul-front-vue/src/components/atoms/AppAlerta.vue" beforeDir="false" afterPath="$PROJECT_DIR$/piedraAzul-front-vue/src/components/atoms/AppAlerta.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/piedraAzul-front-vue/src/components/atoms/AppBadge.vue" beforeDir="false" afterPath="$PROJECT_DIR$/piedraAzul-front-vue/src/components/atoms/AppBadge.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/piedraAzul-front-vue/src/components/atoms/AppButton.vue" beforeDir="false" afterPath="$PROJECT_DIR$/piedraAzul-front-vue/src/components/atoms/AppButton.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/piedraAzul-front-vue/src/components/molecules/FranjasHorarias.vue" beforeDir="false" afterPath="$PROJECT_DIR$/piedraAzul-front-vue/src/components/molecules/FranjasHorarias.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/piedraAzul-front-vue/src/components/molecules/ResumenCita.vue" beforeDir="false" afterPath="$PROJECT_DIR$/piedraAzul-front-vue/src/components/molecules/ResumenCita.vue" afterDir="false" />
-    </list>
+    <list default="true" id="6aad22e7-9e5a-476e-bc3e-55c613f8faea" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -93,7 +84,7 @@
       <option name="presentableId" value="Default" />
       <updated>1774459699269</updated>
       <workItem from="1774459710641" duration="1391000" />
-      <workItem from="1774496361149" duration="692000" />
+      <workItem from="1774496361149" duration="1289000" />
     </task>
     <servers />
   </component>

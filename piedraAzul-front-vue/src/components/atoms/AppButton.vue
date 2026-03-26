@@ -1,3 +1,28 @@
+<template>
+  <button
+    :class="['btn', `btn-${variante}`, { 'btn-sm': small }]"
+    :disabled="loading || disabled"
+    @click="$emit('click')"
+  >
+    <span 
+      v-if="loading" 
+      class="spinner" 
+      :class="{ 'spinner-verde': variante !== 'primario' }"
+    ></span>
+    <slot />
+  </button>
+</template>
+
+<script setup>
+defineProps({
+  variante: { type: String, default: 'primario' },
+  loading:  { type: Boolean, default: false },
+  disabled: { type: Boolean, default: false },
+  small:    { type: Boolean, default: false },
+})
+
+defineEmits(['click'])
+</script>
 <style scoped>
 .btn {
   display: inline-flex;
