@@ -1,8 +1,9 @@
 package com.piedrazul.appointments.services;
 
-import com.piedrazul.appointments.entities.MedicoTerapista;
-import com.piedrazul.appointments.entities.enums.Especialidad;
-import com.piedrazul.appointments.repositories.MedicoTerapistaRepository;
+import com.piedrazul.appointments.medico.entity.MedicoTerapista;
+import com.piedrazul.appointments.medico.service.MedicoTerapistaService;
+import com.piedrazul.appointments.shared.enums.Especialidad;
+import com.piedrazul.appointments.medico.repository.MedicoTerapistaRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

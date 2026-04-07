@@ -1,8 +1,9 @@
 package com.piedrazul.appointments.services;
 
-import com.piedrazul.appointments.entities.Paciente;
-import com.piedrazul.appointments.entities.enums.Genero;
-import com.piedrazul.appointments.repositories.PacienteRepository;
+import com.piedrazul.appointments.paciente.entity.Paciente;
+import com.piedrazul.appointments.paciente.service.PacienteService;
+import com.piedrazul.appointments.shared.enums.Genero;
+import com.piedrazul.appointments.paciente.repository.PacienteRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

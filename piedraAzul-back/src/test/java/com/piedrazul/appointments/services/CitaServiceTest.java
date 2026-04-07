@@ -1,8 +1,16 @@
 package com.piedrazul.appointments.services;
 
-import com.piedrazul.appointments.entities.*;
-import com.piedrazul.appointments.entities.enums.*;
-import com.piedrazul.appointments.repositories.*;
+import com.piedrazul.appointments.cita.entity.Cita;
+import com.piedrazul.appointments.cita.entity.HistorialCita;
+import com.piedrazul.appointments.cita.repository.CitaRepository;
+import com.piedrazul.appointments.cita.repository.HistorialCitaRepository;
+import com.piedrazul.appointments.cita.service.CitaService;
+import com.piedrazul.appointments.medico.entity.MedicoTerapista;
+import com.piedrazul.appointments.medico.repository.MedicoTerapistaRepository;
+import com.piedrazul.appointments.paciente.entity.Paciente;
+import com.piedrazul.appointments.shared.enums.Especialidad;
+import com.piedrazul.appointments.shared.enums.EstadoCita;
+import com.piedrazul.appointments.shared.enums.Genero;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

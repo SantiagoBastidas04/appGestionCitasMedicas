@@ -1,8 +1,9 @@
 package com.piedrazul.appointments.services;
 
-import com.piedrazul.appointments.entities.Administrador;
-import com.piedrazul.appointments.entities.Usuario;
-import com.piedrazul.appointments.repositories.UsuarioRepository;
+import com.piedrazul.appointments.shared.entity.Administrador;
+import com.piedrazul.appointments.shared.entity.Usuario;
+import com.piedrazul.appointments.shared.repository.UsuarioRepository;
+import com.piedrazul.appointments.shared.service.UsuarioService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
