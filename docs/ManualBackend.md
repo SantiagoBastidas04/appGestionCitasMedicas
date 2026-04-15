@@ -1,4 +1,4 @@
-# Piedra Azul (Prototipo: Aun le faltan cosas (ing soft 3 - Segunda entrega!!))
+# Piedra Azul (Prototipo: Aun le faltan cosas (Ing soft 3 - Segunda entrega!!))
 
 > Sistema de gestión de citas médicas desarrollado con Spring Boot.
 
@@ -21,9 +21,7 @@
 
 ## Descripción general
 
-Piedra Azul es el backend de un sistema de agendamiento de citas médicas que permite
-gestionar pacientes, médicos, horarios y citas. Provee una API REST consumida por
-el frontend desarrollado en Angular.
+Este es un sistema de agendamiento de citas médicas que permite gestionar pacientes, médicos, horarios y citas para la clinica de Piedra Azul. Provee una API REST consumida por el frontend desarrollado en Angular.
 
 ---
 
@@ -43,17 +41,11 @@ el frontend desarrollado en Angular.
 ---
 
 ## Arquitectura
+El proyecto implementa una arquitectura de **monolito modular** sobre Spring Boot. El código se organiza verticalmente por dominio de negocio, donde cada módulo encapsula su propio controlador, servicio, repositorio, entidades y DTOs.
 
-El proyecto implementa una arquitectura de **monolito modular** sobre Spring Boot.
-El código se organiza verticalmente por dominio de negocio, donde cada módulo
-encapsula su propio controlador, servicio, repositorio, entidades y DTOs.
+La autenticación y autorización se delegan completamente a **Keycloak** mediante el protocolo OAuth 2.0 / OpenID Connect. Spring Boot actúa como Resource Server, validando los tokens JWT en cada petición entrante.
 
-La autenticación y autorización se delegan completamente a **Keycloak** mediante
-el protocolo OAuth 2.0 / OpenID Connect. Spring Boot actúa como Resource Server,
-validando los tokens JWT en cada petición entrante.
-
-Para más detalle sobre las decisiones arquitectónicas, consulta la carpeta
-[`/docs/adr`](./docs/adr/).
+Para más detalle sobre las decisiones arquitectónicas, consulta la carpeta [`/docs/adr`](./docs/adr/).
 
 ---
 
