@@ -70,10 +70,11 @@ public class SecurityConfig {
                         .hasAnyRole("ADMINISTRADOR", "AGENDADOR")
                         .requestMatchers(HttpMethod.GET, "/api/citas/paciente/**")
                         .hasAnyRole("ADMINISTRADOR", "AGENDADOR", "MEDICO_TERAPISTA", "PACIENTE")
+                        .requestMatchers(HttpMethod.GET, "/api/citas/*/export/csv")
+                        .hasAnyRole("ADMINISTRADOR", "AGENDADOR", "MEDICO_TERAPISTA")
                         // Configuración
                         .requestMatchers("/api/configuracion/**")
                         .hasRole("ADMINISTRADOR")
-
                         .anyRequest().authenticated()
                 )
                 .headers(headers -> headers

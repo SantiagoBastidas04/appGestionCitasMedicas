@@ -16,12 +16,15 @@ import com.piedrazul.appointments.shared.service.IUsuarioService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -48,6 +51,7 @@ public class CitaController {
 
         return ResponseEntity.ok(citas);
     }
+
     @GetMapping("/paciente/{pacienteId}")
     public ResponseEntity<List<CitaResponse>> listarPorPaciente(
             @PathVariable Long pacienteId) {
@@ -57,6 +61,7 @@ public class CitaController {
                 .toList();
         return ResponseEntity.ok(citas);
     }
+
     @PostMapping
     public ResponseEntity<CitaResponse> crearCita(
             @Valid @RequestBody CitaRequest request) {
@@ -121,4 +126,35 @@ public class CitaController {
                 citaMapper.toResponse(citaService.cancelarCita(id))
         );
     }
+
+    @GetMapping("/medico/{medicoId}/fecha/{fecha}/export/csv")
+    public ResponseEntity<String> exportarCitasCSV(
+            @PathVariable Long medicoId,
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha
+    ) {
+        List<Cita> citas = citaService.listarCitasPorMedicoYFecha(
+                medicoId,
+                fecha);
+        StringBuilder csv = new StringBuilder();
+        csv.append("Orden,Hora,Nombre Paciente,Documento,Celular,Estado,Observacion\n");
+        int orden = 1;
+        for (Cita cita : citas) {
+            String nombre = cita.getPaciente().getNombres() + " " + cita.getPaciente().getApellidos();
+            String observacion = cita.getObservacion() != null ? cita.getObservacion().replace(",", ";").replace("\"", "\"\"") : "";
+            csv.append(String.format("%d,%s,%s,%s,%s,%s,%s\n",
+                    orden++,
+                    cita.getHora().format(DateTimeFormatter.ofPattern("HH:mm")),
+                    nombre,
+                    cita.getPaciente().getNumeroDocumento(),
+                    cita.getPaciente().getCelular(),
+                    cita.getEstado().name(),
+                    observacion));
+        }
+        String filename = "citas_medico" + medicoId + "_" + fecha + ".csv";
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"").
+                contentType(MediaType.parseMediaType("text/csv; charset=UTF-8")).
+                body(csv.toString());
+
+    }
+
 }
