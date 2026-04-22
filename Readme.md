@@ -26,9 +26,9 @@ Debes ver los dos contenedores con estado `Up`.
 ```bash
 docker-compose down
 ```
- 
----
 **4. Ya podras hacer uso de las funcionalidades del backend**
+---
+
 ## Opción B — Correr el backend sin Docker
 
 Usa esta opción si prefieres correr el backend directamente en tu máquina para desarrollo.
@@ -45,6 +45,7 @@ Espera ~30 segundos.
 
 
 El backend queda disponible en `http://localhost:8080`.
- 
----
+
 **3. Ya podras hacer uso de las funcionalidades del backend**
+---
+
