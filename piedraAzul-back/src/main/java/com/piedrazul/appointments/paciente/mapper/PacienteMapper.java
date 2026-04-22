@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class PacienteMapper {
 
-    // Request → Entidad (RF2 - sin credenciales)
+    // Request → Entidad
     public Paciente toEntity(PacienteRequest request) {
         return new Paciente(
                 request.getNombres(),

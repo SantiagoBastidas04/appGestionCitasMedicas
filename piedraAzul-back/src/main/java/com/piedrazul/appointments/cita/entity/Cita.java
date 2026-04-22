@@ -10,13 +10,12 @@ import com.piedrazul.appointments.shared.entity.Usuario;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Getter @Setter
+@Getter
+@Setter
 @Entity
 @Table(name = "cita",
-        // Restricción clave del dominio: un médico no puede tener
-        // dos citas en la misma fecha y hora (RF2)
-        uniqueConstraints = @UniqueConstraint(name = "uk_medico_fecha_hora", columnNames = { "medico_id", "fecha",
-                "hora" }))
+        uniqueConstraints = @UniqueConstraint(name = "uk_medico_fecha_hora", columnNames = {"medico_id", "fecha",
+                "hora"}))
 @NoArgsConstructor
 public class Cita {
 
@@ -46,18 +45,17 @@ public class Cita {
     @JoinColumn(name = "registrado_por_id", nullable = false)
     private Usuario registradoPor;
 
-    // Fecha y hora exacta en que se creó el registro
     @Column(nullable = false, updatable = false)
     private LocalDateTime creadoEn = LocalDateTime.now();
 
     private String observacion;
 
     public Cita(MedicoTerapista medico,
-            Paciente paciente,
-            LocalDate fecha,
-            LocalTime hora,
-            Usuario registradoPor,
-            String observacion) {
+                Paciente paciente,
+                LocalDate fecha,
+                LocalTime hora,
+                Usuario registradoPor,
+                String observacion) {
         this.medico = medico;
         this.paciente = paciente;
         this.fecha = fecha;

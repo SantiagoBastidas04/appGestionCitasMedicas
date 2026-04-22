@@ -2,27 +2,27 @@ package com.piedrazul.appointments.shared.security;
 
 import com.piedrazul.appointments.shared.entity.Usuario;
 import com.piedrazul.appointments.shared.repository.UsuarioRepository;
+import com.piedrazul.appointments.shared.service.IUsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 public class AuthUtils {
 
-    private final UsuarioRepository usuarioRepository;
+    private final IUsuarioService usuarioService;
 
-    // Obtiene el usuario autenticado desde el contexto de seguridad
     public Usuario getUsuarioAutenticado() {
-        String username = SecurityContextHolder
-                .getContext()
-                .getAuthentication()
-                .getName();
+        Jwt jwt = (Jwt) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal();
 
-        return usuarioRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException(
-                        "Usuario autenticado no encontrado: " + username
-                ));
+        String username = jwt.getClaimAsString("preferred_username");
+
+        return usuarioService.buscarPorUsername(username)
+                .orElseThrow(() -> new RuntimeException(
+                        "Usuario '" + username + "' autenticado en Keycloak pero no encontrado en BD. " +
+                                "Verifica que el username en Keycloak coincida con el de la base de datos."));
     }
 }

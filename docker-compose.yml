@@ -1,0 +1,29 @@
+services:
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0.3
+    container_name: keycloak-piedrazul
+    ports:
+      - "8180:8080"
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    volumes:
+      - ./piedraAzul-back/keycloak:/opt/keycloak/data/import
+      - ./piedraAzul-back/keycloak/data:/opt/keycloak/data/h2
+    command: start-dev --import-realm
+
+  backend:
+    build: ./piedraAzul-back
+    container_name: backend-piedrazul
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://keycloak:8080/realms/piedrazul/protocol/openid-connect/certs
+      KEYCLOAK_SERVER_URL: http://keycloak:8080
+      KEYCLOAK_REALM: piedrazul
+      KEYCLOAK_ADMIN_USERNAME: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    depends_on:
+      - keycloak
+    restart: on-failure

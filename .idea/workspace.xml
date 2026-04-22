@@ -4,7 +4,25 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6aad22e7-9e5a-476e-bc3e-55c613f8faea" name="Changes" comment="" />
+    <list default="true" id="6aad22e7-9e5a-476e-bc3e-55c613f8faea" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/piedraAzul-back/data/piedrazul.mv.db" beforeDir="false" afterPath="$PROJECT_DIR$/piedraAzul-back/data/piedrazul.mv.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/piedraAzul-back/data/piedrazul.trace.db" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/piedraAzul-back/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/piedraAzul-back/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/piedraAzul-back/src/main/java/com/piedrazul/appointments/AppointmentsApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/piedraAzul-back/src/main/java/com/piedrazul/appointments/AppointmentsApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/piedraAzul-back/src/main/java/com/piedrazul/appointments/auth/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/piedraAzul-back/src/main/java/com/piedrazul/appointments/auth/controller/AuthController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/piedraAzul-back/src/main/java/com/piedrazul/appointments/auth/dto/LoginRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/piedraAzul-back/src/main/java/com/piedrazul/appointments/auth/dto/LoginResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/piedraAzul-back/src/main/java/com/piedrazul/appointments/cita/entity/Cita.java" beforeDir="false" afterPath="$PROJECT_DIR$/piedraAzul-back/src/main/java/com/piedrazul/appointments/cita/entity/Cita.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/piedraAzul-back/src/main/java/com/piedrazul/appointments/paciente/mapper/PacienteMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/piedraAzul-back/src/main/java/com/piedrazul/appointments/paciente/mapper/PacienteMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/piedraAzul-back/src/main/java/com/piedrazul/appointments/shared/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/piedraAzul-back/src/main/java/com/piedrazul/appointments/shared/config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/piedraAzul-back/src/main/java/com/piedrazul/appointments/shared/security/AuthUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/piedraAzul-back/src/main/java/com/piedrazul/appointments/shared/security/AuthUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/piedraAzul-back/src/main/java/com/piedrazul/appointments/shared/security/JwtFilter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/piedraAzul-back/src/main/java/com/piedrazul/appointments/shared/security/JwtProperties.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/piedraAzul-back/src/main/java/com/piedrazul/appointments/shared/security/JwtUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/piedraAzul-back/src/main/java/com/piedrazul/appointments/shared/security/UserDetailsServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/piedraAzul-back/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/piedraAzul-back/src/main/resources/application.properties" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -31,12 +49,18 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.go.formatter.settings.were.checked": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "Spring Boot.AppointmentsApplication.executor": "Run",
-    "git-widget-placeholder": "rama__sofiaGlenn",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "D:/IngSis/Ingenieria de Software 3/piedraAzul/PIEDRA-AZUL---SWIII-",
@@ -51,6 +75,7 @@
   <component name="RunManager">
     <configuration name="AppointmentsApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
       <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="appointments" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.piedrazul.appointments.AppointmentsApplication" />
       <extension name="coverage">
         <pattern>
@@ -85,6 +110,8 @@
       <updated>1774459699269</updated>
       <workItem from="1774459710641" duration="1391000" />
       <workItem from="1774496361149" duration="1289000" />
+      <workItem from="1776390951383" duration="102000" />
+      <workItem from="1776895535374" duration="1520000" />
     </task>
     <servers />
   </component>
