@@ -1,6 +1,6 @@
 # Piedrazul — Ejecucion Backend con Docker
 
-De esta forma se levanta Keycloak y el backend con un solo comando. No necesitas tener Java ni Maven instalados.
+De esta forma se levanta Keycloak y el backend con un solo comando. No necesitas tener Java ni Maven instalados, asegurarse de estar en la carpeta raiz del proyecto (justo donde esta el archivo docker-compose.yml).
 
 **1. Levanta los servicios:**
 
