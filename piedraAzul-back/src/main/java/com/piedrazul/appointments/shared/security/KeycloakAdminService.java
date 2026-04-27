@@ -127,6 +127,7 @@ public class KeycloakAdminService {
                 "firstName", nombres,
                 "lastName", apellidos,
                 "enabled", true,
+                "emailVerified", true,
                 "requiredActions", List.of()
         );
 

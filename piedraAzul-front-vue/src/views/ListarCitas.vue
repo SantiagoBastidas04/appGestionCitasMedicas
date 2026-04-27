@@ -58,9 +58,14 @@
 
       <!-- Tabla de citas -->
       <template v-else>
-        <div class="contador">
-          <svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" stroke="white" stroke-width="2"/><rect x="9" y="3" width="6" height="4" rx="1" stroke="white" stroke-width="2"/></svg>
-          {{ citas.length }} cita{{ citas.length !== 1 ? 's' : '' }} encontrada{{ citas.length !== 1 ? 's' : '' }}
+        <div class="acciones">
+          <div class="contador">
+            <svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" stroke="white" stroke-width="2"/><rect x="9" y="3" width="6" height="4" rx="1" stroke="white" stroke-width="2"/></svg>
+            {{ citas.length }} cita{{ citas.length !== 1 ? 's' : '' }} encontrada{{ citas.length !== 1 ? 's' : '' }}
+          </div>
+          <AppButton variante="contorno" :small="true" :loading="exportando" @click="exportarCSV">
+            Exportar CSV
+          </AppButton>
         </div>
         <div class="tabla-wrap">
           <table>
@@ -115,6 +120,7 @@ const citas       = ref([])
 const estado      = ref('')       // '' | 'cargando' | 'ok' | 'error'
 const mensajeError = ref('')
 const cargando    = ref(false)
+const exportando  = ref(false)
 const errores     = ref({})
 
 async function buscar() {
@@ -146,6 +152,32 @@ async function cancelar(id) {
   }
 }
 
+async function exportarCSV() {
+  if (!medicoId.value || !fecha.value) {
+    toast('Seleccione medico y fecha', 'err')
+    return
+  }
+
+  exportando.value = true
+  try {
+    const { blob, filename } = await citaService.exportCsvByMedicoFecha(medicoId.value, fecha.value)
+    const finalName = filename || `citas_medico${medicoId.value}_${fecha.value}.csv`
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = finalName
+    document.body.appendChild(link)
+    link.click()
+    link.remove()
+    URL.revokeObjectURL(url)
+    toast('CSV descargado')
+  } catch (e) {
+    toast('Error al exportar CSV: ' + e.message, 'err')
+  } finally {
+    exportando.value = false
+  }
+}
+
 // Permite que App.vue dispare una búsqueda con parámetros predefinidos
 defineExpose({ medicoId, fecha, buscar })
 </script>
@@ -158,11 +190,12 @@ defineExpose({ medicoId, fecha, buscar })
 .estado-centro { text-align: center; padding: 48px; }
 .estado-centro p { margin-top: 12px; color: var(--texto-tenue); font-size: 14px; }
 
+.acciones { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
 .contador {
   display: inline-flex; align-items: center; gap: 8px;
   background: var(--verde-oscuro); color: var(--blanco);
   padding: 7px 16px; border-radius: 20px;
-  font-size: 13px; font-weight: 600; margin-bottom: 14px; letter-spacing: .02em;
+  font-size: 13px; font-weight: 600; letter-spacing: .02em;
 }
 .tabla-wrap { overflow-x: auto; border-radius: var(--radio-md); border: 1px solid var(--borde); }
 table { width: 100%; border-collapse: collapse; font-size: 14px; }
