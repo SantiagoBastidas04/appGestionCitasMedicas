@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Piedrazul — Auth</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --stone: #1c1917;
+      --slate: #292524;
+      --mist: #e7e5e4;
+      --accent: #38bdf8;
+      --accent-dark: #0284c7;
+      --error: #f87171;
+      --success: #4ade80;
+      --radius: 10px;
+      --font-display: 'DM Serif Display', serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--stone);
+      color: var(--mist);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    /* ── Card ─────────────────────────────── */
+    .card {
+      background: var(--slate);
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 18px;
+      width: 100%;
+      max-width: 420px;
+      padding: 2.5rem 2rem;
+      box-shadow: 0 20px 60px rgba(0,0,0,.5);
+    }
+
+    .brand {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .brand h1 {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      letter-spacing: .03em;
+      color: #fff;
+    }
+    .brand p {
+      font-size: .8rem;
+      color: #a8a29e;
+      margin-top: .2rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    /* ── Tabs ─────────────────────────────── */
+    .tabs {
+      display: flex;
+      gap: .5rem;
+      margin-bottom: 1.8rem;
+      background: rgba(0,0,0,.25);
+      border-radius: 8px;
+      padding: 4px;
+    }
+    .tab-btn {
+      flex: 1;
+      padding: .55rem;
+      border: none;
+      border-radius: 6px;
+      background: transparent;
+      color: #a8a29e;
+      font-family: var(--font-body);
+      font-size: .85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background .2s, color .2s;
+    }
+    .tab-btn.active {
+      background: var(--accent);
+      color: var(--stone);
+    }
+
+    /* ── Forms ────────────────────────────── */
+    .form-section { display: none; }
+    .form-section.active { display: block; }
+
+    .field { margin-bottom: 1.1rem; }
+    label {
+      display: block;
+      font-size: .78rem;
+      font-weight: 500;
+      color: #a8a29e;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      margin-bottom: .4rem;
+    }
+    input, select {
+      width: 100%;
+      background: rgba(0,0,0,.3);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: var(--radius);
+      color: #fff;
+      font-family: var(--font-body);
+      font-size: .9rem;
+      padding: .65rem .9rem;
+      outline: none;
+      transition: border-color .2s;
+    }
+    input:focus, select:focus { border-color: var(--accent); }
+    select option { background: var(--slate); }
+
+    .row { display: flex; gap: .75rem; }
+    .row .field { flex: 1; }
+
+    /* ── Button ───────────────────────────── */
+    .btn {
+      width: 100%;
+      padding: .75rem;
+      margin-top: .5rem;
+      border: none;
+      border-radius: var(--radius);
+      background: var(--accent);
+      color: var(--stone);
+      font-family: var(--font-body);
+      font-size: .95rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background .2s, opacity .2s;
+    }
+    .btn:hover { background: var(--accent-dark); color: #fff; }
+    .btn:disabled { opacity: .5; cursor: not-allowed; }
+
+    /* ── Messages ─────────────────────────── */
+    .msg {
+      border-radius: 8px;
+      padding: .65rem .9rem;
+      font-size: .85rem;
+      margin-bottom: 1rem;
+      display: none;
+    }
+    .msg.error  { background: rgba(248,113,113,.12); border: 1px solid var(--error);   color: var(--error);   display: block; }
+    .msg.success{ background: rgba(74,222,128,.12);  border: 1px solid var(--success);  color: var(--success); display: block; }
+
+    /* ── Session panel ────────────────────── */
+    #session-panel { display: none; }
+    .avatar {
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: var(--stone);
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1rem;
+    }
+    .session-info { text-align: center; margin-bottom: 1.5rem; }
+    .session-info .nombre { font-family: var(--font-display); font-size: 1.3rem; }
+    .session-info .rol    { font-size: .78rem; color: var(--accent); letter-spacing: .08em; text-transform: uppercase; margin-top: .2rem; }
+    .session-info .user   { font-size: .8rem; color: #a8a29e; margin-top: .15rem; }
+
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,.15);
+      color: var(--mist);
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,.06); color: #fff; }
+  </style>
+</head>
+<body>
+
+<div class="card">
+
+  <!-- ── Branding ── -->
+  <div class="brand">
+    <h1>Piedrazul</h1>
+    <p>Sistema de salud</p>
+  </div>
+
+  <!-- ── Auth forms ── -->
+  <div id="auth-panel">
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('login')">Iniciar sesión</button>
+      <button class="tab-btn"        onclick="switchTab('registro')">Registro</button>
+    </div>
+
+    <!-- LOGIN -->
+    <div id="tab-login" class="form-section active">
+      <div id="login-msg" class="msg"></div>
+      <div class="field">
+        <label>Usuario</label>
+        <input id="l-username" type="text" placeholder="tu_usuario" autocomplete="username"/>
+      </div>
+      <div class="field">
+        <label>Contraseña</label>
+        <input id="l-password" type="password" placeholder="••••••••" autocomplete="current-password"/>
+      </div>
+      <button class="btn" onclick="doLogin()">Entrar</button>
+    </div>
+
+    <!-- REGISTRO -->
+    <div id="tab-registro" class="form-section">
+      <div id="reg-msg" class="msg"></div>
+      <div class="row">
+        <div class="field">
+          <label>Nombres</label>
+          <input id="r-nombres" type="text" placeholder="Ana"/>
+        </div>
+        <div class="field">
+          <label>Apellidos</label>
+          <input id="r-apellidos" type="text" placeholder="García"/>
+        </div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label>N° Documento</label>
+          <input id="r-numeroDocumento" type="text" placeholder="1234567890"/>
+        </div>
+        <div class="field">
+          <label>Celular</label>
+          <input id="r-celular" type="tel" placeholder="3001234567"/>
+        </div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label>Género</label>
+          <select id="r-genero">
+            <option value="">— seleccionar —</option>
+            <option value="MASCULINO">Masculino</option>
+            <option value="FEMENINO">Femenino</option>
+            <option value="OTRO">Otro</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Rol</label>
+          <select id="r-rol">
+            <option value="PACIENTE">Paciente</option>
+            <option value="AGENDADOR">Agendador</option>
+            <option value="MEDICO_TERAPISTA">Médico / Terapista</option>
+            <option value="ADMINISTRADOR">Administrador</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label>Usuario</label>
+        <input id="r-username" type="text" placeholder="ana_garcia" autocomplete="username"/>
+      </div>
+      <div class="field">
+        <label>Contraseña</label>
+        <input id="r-password" type="password" placeholder="••••••••" autocomplete="new-password"/>
+      </div>
+      <button class="btn" onclick="doRegistro()">Crear cuenta</button>
+    </div>
+
+  </div><!-- /auth-panel -->
+
+  <!-- ── Session panel ── -->
+  <div id="session-panel">
+    <div class="avatar" id="avatar-letra">U</div>
+    <div class="session-info">
+      <div class="nombre" id="s-nombre"></div>
+      <div class="rol"    id="s-rol"></div>
+      <div class="user"   id="s-user"></div>
+    </div>
+    <button class="btn btn-secondary" onclick="cerrarSesion()">Cerrar sesión</button>
+  </div>
+
+</div><!-- /card -->
+
+<script>
+/* ═══════════════════════════════════════════
+   PIEDRAZUL — Auth (vanilla JS)
+═══════════════════════════════════════════ */
+
+const KEYCLOAK_URL    = 'http://localhost:8180'
+const KEYCLOAK_REALM  = 'piedrazul'
+const KEYCLOAK_CLIENT = 'piedrazul-api'
+const KEYCLOAK_SECRET = '2KXl7iotkKytFVJfshubDK9MaoxXF8eV'
+const API             = 'http://localhost:8080/api'
+
+const ROLES_LABEL = {
+  ADMINISTRADOR:    'Administrador',
+  MEDICO_TERAPISTA: 'Médico',
+  AGENDADOR:        'Agendador',
+  PACIENTE:         'Paciente',
+}
+
+let usuario = null   // { token, username, rol, nombres, apellidos }
+
+/* ── UI helpers ─────────────────────────── */
+function showMsg(id, text, tipo = 'error') {
+  const el = document.getElementById(id)
+  el.className = `msg ${tipo}`
+  el.textContent = text
+}
+function clearMsg(id) {
+  const el = document.getElementById(id)
+  el.className = 'msg'
+  el.textContent = ''
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach((b, i) =>
+    b.classList.toggle('active', (i === 0) === (tab === 'login'))
+  )
+  document.getElementById('tab-login').classList.toggle('active', tab === 'login')
+  document.getElementById('tab-registro').classList.toggle('active', tab === 'registro')
+  clearMsg('login-msg')
+  clearMsg('reg-msg')
+}
+
+function renderSession() {
+  const iniciales = (usuario.nombres?.[0] || usuario.username?.[0] || 'U').toUpperCase()
+  const nombre = usuario.nombres
+    ? `${usuario.nombres} ${usuario.apellidos || ''}`.trim()
+    : usuario.username
+
+  document.getElementById('avatar-letra').textContent = iniciales
+  document.getElementById('s-nombre').textContent = nombre
+  document.getElementById('s-rol').textContent    = ROLES_LABEL[usuario.rol] || usuario.rol || ''
+  document.getElementById('s-user').textContent   = '@' + usuario.username
+
+  document.getElementById('auth-panel').style.display    = 'none'
+  document.getElementById('session-panel').style.display = 'block'
+}
+
+/* ── Keycloak login ─────────────────────── */
+async function login(username, password) {
+  const params = new URLSearchParams()
+  params.append('grant_type',    'password')
+  params.append('client_id',     KEYCLOAK_CLIENT)
+  params.append('client_secret', KEYCLOAK_SECRET)
+  params.append('username',      username)
+  params.append('password',      password)
+
+  const res = await fetch(
+    `${KEYCLOAK_URL}/realms/${KEYCLOAK_REALM}/protocol/openid-connect/token`,
+    { method: 'POST', body: params }
+  )
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}))
+    throw new Error(err.error_description || err.error || `Error Keycloak ${res.status}`)
+  }
+
+  const data = await res.json()
+  const payload = JSON.parse(atob(data.access_token.split('.')[1]))
+
+  usuario = {
+    token:     data.access_token,
+    username:  payload.preferred_username,
+    rol:       payload.roles?.find(r =>
+      ['ADMINISTRADOR','AGENDADOR','MEDICO_TERAPISTA','PACIENTE'].includes(r)
+    ) || null,
+    nombres:   payload.given_name  || payload.preferred_username,
+    apellidos: payload.family_name || '',
+  }
+}
+
+/* ── Backend registro ───────────────────── */
+async function registro(form) {
+  const res = await fetch(`${API}/auth/registro`, {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body:    JSON.stringify(form),
+  })
+  if (!res.ok) {
+    if (res.status === 409) throw new Error('El usuario o documento ya existe')
+    throw new Error('Error al registrar usuario')
+  }
+  await login(form.username, form.password)
+}
+
+/* ── Handlers ───────────────────────────── */
+async function doLogin() {
+  clearMsg('login-msg')
+  const username = document.getElementById('l-username').value.trim()
+  const password = document.getElementById('l-password').value
+  if (!username || !password) { showMsg('login-msg', 'Completa todos los campos'); return }
+  try {
+    await login(username, password)
+    renderSession()
+  } catch (e) {
+    showMsg('login-msg', e.message)
+  }
+}
+
+async function doRegistro() {
+  clearMsg('reg-msg')
+  const form = {
+    nombres:         document.getElementById('r-nombres').value.trim(),
+    apellidos:       document.getElementById('r-apellidos').value.trim(),
+    numeroDocumento: document.getElementById('r-numeroDocumento').value.trim(),
+    celular:         document.getElementById('r-celular').value.trim(),
+    genero:          document.getElementById('r-genero').value,
+    username:        document.getElementById('r-username').value.trim(),
+    password:        document.getElementById('r-password').value,
+    rol:             document.getElementById('r-rol').value,
+  }
+  if (!form.nombres || !form.apellidos || !form.numeroDocumento || !form.celular || !form.genero || !form.username || !form.password) {
+    showMsg('reg-msg', 'Completa todos los campos'); return
+  }
+  try {
+    await registro(form)
+    renderSession()
+  } catch (e) {
+    showMsg('reg-msg', e.message)
+  }
+}
+
+function cerrarSesion() {
+  usuario = null
+  document.getElementById('session-panel').style.display = 'none'
+  document.getElementById('auth-panel').style.display    = 'block'
+  switchTab('login')
+}
+</script>
+</body>
+</html>
