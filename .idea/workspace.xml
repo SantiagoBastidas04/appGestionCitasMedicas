@@ -6,6 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="6aad22e7-9e5a-476e-bc3e-55c613f8faea" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/piedraAzul-back/keycloak/data/keycloakdb.mv.db" beforeDir="false" afterPath="$PROJECT_DIR$/piedraAzul-back/keycloak/data/keycloakdb.mv.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/piedraAzul-back/keycloak/data/keycloakdb.trace.db" beforeDir="false" afterPath="$PROJECT_DIR$/piedraAzul-back/keycloak/data/keycloakdb.trace.db" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -95,7 +97,10 @@
       <workItem from="1774459710641" duration="1391000" />
       <workItem from="1774496361149" duration="1289000" />
       <workItem from="1776390951383" duration="102000" />
-      <workItem from="1776895535374" duration="1520000" />
+      <workItem from="1776895535374" duration="2536000" />
+      <workItem from="1776962738297" duration="241000" />
+      <workItem from="1776964699693" duration="92000" />
+      <workItem from="1776965640111" duration="1082000" />
     </task>
     <servers />
   </component>
