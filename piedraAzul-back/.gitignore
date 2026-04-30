@@ -31,3 +31,13 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Bases de datos locales
+*.mv.db
+*.trace.db
+
+# Archivos comprimidos
+*.zip
+
+# IntelliJ
+.idea/

@@ -2,13 +2,18 @@ package com.piedrazul.appointments.medico.controller;
 
 import com.piedrazul.appointments.medico.dto.MedicoTerapistaRequest;
 import com.piedrazul.appointments.medico.dto.MedicoTerapistaResponse;
+import com.piedrazul.appointments.medico.entity.MedicoTerapista;
 import com.piedrazul.appointments.shared.enums.Especialidad;
+import com.piedrazul.appointments.shared.security.KeycloakAdminService;
 import com.piedrazul.appointments.medico.mapper.MedicoTerapistaMapper;
 import com.piedrazul.appointments.medico.service.IMedicoTerapistaService;
+import com.piedrazul.appointments.paciente.entity.Paciente;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,9 +22,10 @@ import java.util.List;
 @RequestMapping("/api/medicos")
 @RequiredArgsConstructor
 public class MedicoTerapistaController {
-
+    private final PasswordEncoder passwordEncoder;
     private final IMedicoTerapistaService medicoService;
     private final MedicoTerapistaMapper medicoMapper;
+    private final KeycloakAdminService keycloakAdminService;
 
     @GetMapping
     public ResponseEntity<List<MedicoTerapistaResponse>> listarActivos() {
@@ -51,11 +57,41 @@ public class MedicoTerapistaController {
 
     @PostMapping
     public ResponseEntity<MedicoTerapistaResponse> crearMedico(
-            @Valid @RequestBody MedicoTerapistaRequest request) {
-        MedicoTerapistaResponse response = medicoMapper.toResponse(
-                medicoService.guardar(medicoMapper.toEntity(request))
-        );
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+                    @Valid @RequestBody MedicoTerapistaRequest request) {
+
+            // 1. Crear en Keycloak primero
+            try {
+                    keycloakAdminService.crearUsuario(
+                                    request.getUsername(),
+                                    request.getPassword(),
+                                    request.getNombres(),
+                                    request.getApellidos(),
+                                    "MEDICO_TERAPISTA");
+            } catch (KeycloakAdminService.KeycloakUserCreationException e) {
+                    return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            }
+
+            try {
+                    MedicoTerapista medico = new MedicoTerapista(
+                                    request.getUsername(),
+                                    passwordEncoder.encode(request.getPassword()),
+                                    request.getNombres(),
+                                    request.getApellidos(),
+                                    true,
+                                    request.getEspecialidad(),
+                                    request.getIntervaloCitas(),
+                                    request.getHoraInicio(),
+                                    request.getHoraFin());
+                    // los diasAtencion no van en el constructor, se asignan aparte
+                    medico.setDiasAtencion(request.getDiasAtencion());
+
+                    MedicoTerapistaResponse response = medicoMapper.toResponse(medicoService.guardar(medico));
+                    return ResponseEntity.status(HttpStatus.CREATED).body(response);
+
+            } catch (Exception e) {
+                    keycloakAdminService.eliminarUsuario(request.getUsername()); // rollback
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
     }
 
 
