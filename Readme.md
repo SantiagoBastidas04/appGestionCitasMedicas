@@ -1,6 +1,6 @@
 # Piedra Azul — Sistema de Gestión de Citas Médicas
 
-> Proyecto académico · Ingeniería de Software III · Universidad del Cauca · 2026
+> Ingeniería de Software III · Universidad del Cauca · 2026
 
 Sistema de agendamiento de citas médicas para la clínica Piedra Azul. Compuesto por un backend en Spring Boot, un frontend en Vue 3, y Keycloak como servidor de identidad — los tres completamente dockerizados.
 
@@ -288,4 +288,4 @@ curl -X POST http://localhost:8180/realms/piedrazul/protocol/openid-connect/toke
 
 ---
 
-> Proyecto académico — Ingeniería de Software III · Universidad del Cauca · 2026
+> Ingeniería de Software III · Universidad del Cauca · 2026
