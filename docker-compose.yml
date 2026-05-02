@@ -17,6 +17,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
+
   backend:
     build: ./piedraAzul-back
     container_name: backend-piedrazul
@@ -31,4 +32,15 @@ services:
     depends_on:
       keycloak:
         condition: service_healthy
+    restart: on-failure
+
+  frontend:
+    build:
+      context: ./piedraAzul-front-vue
+      dockerfile: Dockerfile
+    container_name: frontend-piedrazul
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
     restart: on-failure
