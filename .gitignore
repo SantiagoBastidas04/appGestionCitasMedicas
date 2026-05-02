@@ -1,0 +1,54 @@
+# ============================================================
+#  PIEDRA AZUL — .gitignore raíz del proyecto
+# ============================================================
+
+# ──────────────────────────────────────────────────────────
+#  IDEs / editores
+# ──────────────────────────────────────────────────────────
+.idea/
+*.iws
+*.iml
+*.ipr
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ──────────────────────────────────────────────────────────
+#  Back-end (Spring Boot / Maven)
+# ──────────────────────────────────────────────────────────
+piedraAzul-back/target/
+piedraAzul-back/.mvn/wrapper/maven-wrapper.jar
+piedraAzul-back/build/
+
+# Bases de datos H2 generadas al ejecutar Docker Compose
+# (se crean en data/ tanto en la raíz como dentro del back)
+*.mv.db
+*.trace.db
+*.lock.db
+data/
+
+# ──────────────────────────────────────────────────────────
+#  Keycloak — datos de BD persistidos localmente
+# ──────────────────────────────────────────────────────────
+piedraAzul-back/keycloak/data/
+
+# ──────────────────────────────────────────────────────────
+#  Front-end (Vue / Vite)
+# ──────────────────────────────────────────────────────────
+piedraAzul-front-vue/node_modules/
+piedraAzul-front-vue/dist/
+piedraAzul-front-vue/.vite/
+
+# ──────────────────────────────────────────────────────────
+#  Archivos comprimidos generados localmente
+# ──────────────────────────────────────────────────────────
+*.zip
+*.tar.gz
+
+# ──────────────────────────────────────────────────────────
+#  Logs
+# ──────────────────────────────────────────────────────────
+*.log
+logs/
