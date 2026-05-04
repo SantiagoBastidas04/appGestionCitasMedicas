@@ -6,9 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="6aad22e7-9e5a-476e-bc3e-55c613f8faea" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/piedraAzul-back/keycloak/data/keycloakdb.mv.db" beforeDir="false" afterPath="$PROJECT_DIR$/piedraAzul-back/keycloak/data/keycloakdb.mv.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/piedraAzul-back/keycloak/data/keycloakdb.trace.db" beforeDir="false" afterPath="$PROJECT_DIR$/piedraAzul-back/keycloak/data/keycloakdb.trace.db" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -104,6 +101,9 @@
       <workItem from="1776965640111" duration="1082000" />
       <workItem from="1777505812540" duration="1114000" />
       <workItem from="1777511796104" duration="631000" />
+      <workItem from="1777756735996" duration="283000" />
+      <workItem from="1777853067413" duration="814000" />
+      <workItem from="1777931146857" duration="1079000" />
     </task>
     <servers />
   </component>
