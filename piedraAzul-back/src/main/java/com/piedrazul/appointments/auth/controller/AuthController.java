@@ -5,6 +5,10 @@ import com.piedrazul.appointments.paciente.dto.PacienteResponse;
 import com.piedrazul.appointments.paciente.entity.Paciente;
 import com.piedrazul.appointments.paciente.mapper.PacienteMapper;
 import com.piedrazul.appointments.paciente.service.IPacienteService;
+import com.piedrazul.appointments.shared.exception.CorreoDuplicadoException;
+import com.piedrazul.appointments.shared.exception.DocumentoDuplicadoException;
+import com.piedrazul.appointments.shared.exception.RegistroException;
+import com.piedrazul.appointments.shared.exception.UsuarioDuplicadoException;
 import com.piedrazul.appointments.shared.security.KeycloakAdminService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -36,8 +40,7 @@ public class AuthController {
                     "PACIENTE"
             );
         } catch (KeycloakAdminService.KeycloakUserCreationException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .build();
+            throw new UsuarioDuplicadoException(request.getUsername());
         }
 
         try {
@@ -52,9 +55,15 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(pacienteMapper.toResponse(pacienteService.guardarPaciente(paciente)));
 
+        } catch (DocumentoDuplicadoException e) {
+            keycloakAdminService.eliminarUsuario(request.getUsername());
+            throw e;
+        } catch (CorreoDuplicadoException e) {
+        keycloakAdminService.eliminarUsuario(request.getUsername());
+        throw e;
         } catch (Exception e) {
             keycloakAdminService.eliminarUsuario(request.getUsername());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            throw new RegistroException("No se pudo completar el registro. Intente de nuevo.");
         }
     }
 }

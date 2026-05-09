@@ -16,4 +16,8 @@ public interface PacienteRepository extends JpaRepository<Paciente, Long> {
 
     // Buscar paciente por nombre de usuario
     Optional<Paciente> findByUsername(String username);
+
+    boolean existsByCorreoElectronico(String correoElectronico);
+
+
 }
