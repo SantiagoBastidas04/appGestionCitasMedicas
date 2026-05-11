@@ -52,3 +52,11 @@ piedraAzul-front-vue/.vite/
 # ──────────────────────────────────────────────────────────
 *.log
 logs/
+
+
+# ──────────────────────────────────────────────────────────
+#  SonarQube — archivos de análisis generados localmente
+# ──────────────────────────────────────────────────────────
+.scannerwork/
+.sonar/
+piedraAzul-back/jdk-21_linux-x64_bin.deb
