@@ -27,7 +27,7 @@ public class Paciente extends Usuario {
     private Genero genero;
 
     private LocalDate fechaNacimiento;
-    @Column(unique = true)
+
     private String correoElectronico;
 
     public Paciente(String username,
