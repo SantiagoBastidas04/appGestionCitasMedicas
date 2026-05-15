@@ -41,6 +41,7 @@
       </template>
       <div class="tabla-wrap">
         <table>
+          <caption>Listado de medicos y terapistas registrados</caption>
           <thead>
             <tr>
               <th>Nombre</th><th>Especialidad</th><th>Horario</th>

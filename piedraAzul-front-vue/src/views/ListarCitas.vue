@@ -70,6 +70,7 @@
         </div>
         <div class="tabla-wrap">
           <table>
+            <caption>Listado detallado de citas programadas</caption>
             <thead>
               <tr>
                 <th>#</th><th>Hora</th><th>Paciente</th><th>Documento</th>

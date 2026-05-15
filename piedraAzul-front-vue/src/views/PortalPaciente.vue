@@ -116,6 +116,7 @@
 
         <div v-else class="tabla-wrap">
           <table>
+            <caption>Listado de citas programadas</caption>
             <thead>
               <tr>
                 <th>Profesional</th>
