@@ -59,8 +59,8 @@ public class AuthController {
             keycloakAdminService.eliminarUsuario(request.getUsername());
             throw e;
         } catch (CorreoDuplicadoException e) {
-        keycloakAdminService.eliminarUsuario(request.getUsername());
-        throw e;
+            keycloakAdminService.eliminarUsuario(request.getUsername());
+            throw e;
         } catch (Exception e) {
             keycloakAdminService.eliminarUsuario(request.getUsername());
             throw new RegistroException("No se pudo completar el registro. Intente de nuevo.");

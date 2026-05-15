@@ -6,10 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import com.piedrazul.appointments.shared.exception.DocumentoDuplicadoException;
-import com.piedrazul.appointments.shared.exception.RegistroException;
-import com.piedrazul.appointments.shared.exception.UsuarioDuplicadoException;
-import com.piedrazul.appointments.shared.exception.CorreoDuplicadoException;
+
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -41,6 +38,7 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(respuesta);
     }
+
     @ExceptionHandler(UsuarioDuplicadoException.class)
     public ResponseEntity<Map<String, Object>> handleUsuarioDuplicado(
             UsuarioDuplicadoException ex,
@@ -88,16 +86,16 @@ public class GlobalExceptionHandler {
 
 
     @ExceptionHandler(CorreoDuplicadoException.class)
-    public ResponseEntity<Map<String,Object>> handleCorreo(
+    public ResponseEntity<Map<String, Object>> handleCorreo(
             CorreoDuplicadoException ex,
-            HttpServletRequest request){
+            HttpServletRequest request) {
         Map<String, Object> respuesta = new LinkedHashMap<>();
         respuesta.put("timestamp", LocalDateTime.now().toString());
-        respuesta.put("status", 500);
-        respuesta.put("error", "Error en el registro");
+        respuesta.put("status", 409);
+        respuesta.put("error", "Correo duplicado");
         respuesta.put("mensaje", ex.getMessage());
         respuesta.put("path", request.getRequestURI());
 
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(respuesta);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(respuesta);
     }
 }
