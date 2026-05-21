@@ -31,21 +31,22 @@ public class AuthController {
     @PostMapping("/registro")
     public ResponseEntity<PacienteResponse> registro(
             @Valid @RequestBody RegistroPacienteRequest request) {
+        String username = request.getUsername().trim().toLowerCase();
         try {
             keycloakAdminService.crearUsuario(
-                    request.getUsername(),
+                    username,
                     request.getPassword(),
                     request.getNombres(),
                     request.getApellidos(),
                     "PACIENTE"
             );
         } catch (KeycloakAdminService.KeycloakUserCreationException e) {
-            throw new UsuarioDuplicadoException(request.getUsername());
+            throw new UsuarioDuplicadoException(username);
         }
 
         try {
             Paciente paciente = new Paciente(
-                    request.getUsername(),
+                    username,
                     passwordEncoder.encode(request.getPassword()),
                     request.getNombres(), request.getApellidos(),
                     request.getNumeroDocumento(), request.getCelular(),
@@ -56,13 +57,13 @@ public class AuthController {
                     .body(pacienteMapper.toResponse(pacienteService.guardarPaciente(paciente)));
 
         } catch (DocumentoDuplicadoException e) {
-            keycloakAdminService.eliminarUsuario(request.getUsername());
+            keycloakAdminService.eliminarUsuario(username);
             throw e;
         } catch (CorreoDuplicadoException e) {
-            keycloakAdminService.eliminarUsuario(request.getUsername());
+            keycloakAdminService.eliminarUsuario(username);
             throw e;
         } catch (Exception e) {
-            keycloakAdminService.eliminarUsuario(request.getUsername());
+            keycloakAdminService.eliminarUsuario(username);
             throw new RegistroException("No se pudo completar el registro. Intente de nuevo.");
         }
     }
