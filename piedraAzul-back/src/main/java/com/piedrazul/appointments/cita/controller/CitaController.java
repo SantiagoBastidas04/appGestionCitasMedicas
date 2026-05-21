@@ -35,7 +35,6 @@ public class CitaController {
     private final ICitaService citaService;
     private final IPacienteService pacienteService;
     private final IMedicoTerapistaService medicoService;
-    private final IUsuarioService usuarioService;
     private final CitaMapper citaMapper;
     private final AuthUtils authUtils;
 
@@ -106,7 +105,7 @@ public class CitaController {
                 request.getNuevaHora(),
                 modificadoPor
         );
-
+        
         return ResponseEntity.ok(citaMapper.toResponse(cita));
     }
 

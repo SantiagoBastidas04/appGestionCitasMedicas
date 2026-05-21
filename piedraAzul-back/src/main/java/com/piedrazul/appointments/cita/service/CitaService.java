@@ -53,6 +53,8 @@ public class CitaService implements ICitaService {
         HistorialCita historialCita = new HistorialCita(cita, cita.getFecha(), cita.getHora(), modificadoPor);
         historialCitaRepository.save(historialCita);
         validadDisponibilidad(cita.getMedico(), nuevaFecha, nuevaHora);
+        cita.setFecha(nuevaFecha);
+        cita.setHora(nuevaHora);
         return citaRepository.save(cita);
     }
 
