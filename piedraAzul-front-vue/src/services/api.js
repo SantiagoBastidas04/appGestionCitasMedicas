@@ -12,7 +12,7 @@ function getToken() {
   const { usuario } = useAuth()
   return usuario.value?.token || null
 }
-
+//facade para manejar las llamadas al backend, incluyendo el token de autenticación y el manejo de errores
 async function http(url, opts = {}) {
   const token = getToken()
 

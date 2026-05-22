@@ -19,15 +19,20 @@ const KEYCLOAK_SECRET = import.meta.env.VITE_KEYCLOAK_SECRET ?? 'lU5PljMWMfq0sM9
 const API = import.meta.env.VITE_API_URL ?? 'http://localhost:8080/api'
 // ─────────────────────────────────────────────────────────────────────────
 
+function normalizeUsername(value) {
+  return (value || '').trim().toLowerCase()
+}
+
 export function useAuth() {
 
   async function login(username, password) {
     // 1. Pedir token directamente a Keycloak
+    const normalizedUsername = normalizeUsername(username)
     const params = new URLSearchParams()
     params.append('grant_type', 'password')
     params.append('client_id', KEYCLOAK_CLIENT)
     params.append('client_secret', KEYCLOAK_SECRET)
-    params.append('username', username)
+    params.append('username', normalizedUsername)
     params.append('password', password)
 
     const res = await fetch(
@@ -36,7 +41,21 @@ export function useAuth() {
     )
 
     if (!res.ok) {
-      throw new Error('Usuario o contraseña incorrectos')
+      let payload = null
+      try {
+        payload = await res.json()
+      } catch {
+        payload = null
+      }
+
+      if (payload?.error === 'invalid_grant') {
+        throw new Error('Usuario o contraseña incorrectos')
+      }
+      if (payload?.error === 'invalid_client') {
+        throw new Error('Cliente de Keycloak inválido')
+      }
+
+      throw new Error(payload?.error_description || payload?.error || 'Error de autenticación')
     }
 
     const data = await res.json()
@@ -58,19 +77,42 @@ export function useAuth() {
 
   async function registro(form) {
     // El registro va al backend de Spring Boot (que a su vez crea en Keycloak)
+    const payload = {
+      ...form,
+      username: normalizeUsername(form.username),
+    }
+
     const res = await fetch(`${API}/auth/registro`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(form),
+      body: JSON.stringify(payload),
     })
 
     if (!res.ok) {
-      if (res.status === 409) throw new Error('El usuario o documento ya existe')
-      throw new Error('Error al registrar usuario')
+      let payload = null
+      try {
+        payload = await res.json()
+      } catch {
+        payload = null
+      }
+
+      if (res.status === 409) {
+        const err = new Error(payload?.mensaje || 'El usuario o documento ya existe')
+        err.code = 'DUPLICATE'
+        throw err
+      }
+      if (res.status === 400) {
+        const err = new Error(payload?.mensaje || 'Datos inválidos')
+        err.code = 'VALIDATION'
+        err.fieldErrors = Array.isArray(payload?.campos) ? payload.campos : []
+        throw err
+      }
+
+      throw new Error(payload?.mensaje || 'Error al registrar usuario')
     }
 
     // Login automático tras registro exitoso
-    await login(form.username, form.password)
+    await login(payload.username, form.password)
   }
 
   function cerrarSesion() {
