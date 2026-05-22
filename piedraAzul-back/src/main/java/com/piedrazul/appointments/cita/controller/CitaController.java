@@ -12,7 +12,6 @@ import com.piedrazul.appointments.paciente.entity.Paciente;
 import com.piedrazul.appointments.paciente.service.IPacienteService;
 import com.piedrazul.appointments.shared.security.AuthUtils;
 import com.piedrazul.appointments.shared.entity.Usuario;
-import com.piedrazul.appointments.shared.service.IUsuarioService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;

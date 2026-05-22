@@ -7,7 +7,6 @@ import com.piedrazul.appointments.paciente.mapper.PacienteMapper;
 import com.piedrazul.appointments.paciente.service.IPacienteService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,7 +53,7 @@ public class PacienteController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-
+    /* 
     @PostMapping
     public ResponseEntity<PacienteResponse> crearPaciente(
             @Valid @RequestBody PacienteRequest request) {
@@ -62,7 +61,7 @@ public class PacienteController {
                 pacienteService.guardarPaciente(pacienteMapper.toEntity(request))
         );
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
+    }*/
 
     @PutMapping("/{id}")
     public ResponseEntity<PacienteResponse> actualizarPaciente(

@@ -41,8 +41,9 @@ public class MedicoTerapistaService implements IMedicoTerapistaService {
     @Override
     @Transactional
     public MedicoTerapista guardar(MedicoTerapistaRequest request) {
+        String username = request.getUsername().trim().toLowerCase();
         keycloakAdminService.crearUsuario(
-                request.getUsername(),
+                username,
                 request.getPassword(),
                 request.getNombres(),
                 request.getApellidos(),
@@ -50,7 +51,7 @@ public class MedicoTerapistaService implements IMedicoTerapistaService {
 
         try {
             MedicoTerapista medico = new MedicoTerapista(
-                    request.getUsername(),
+                    username,
                     passwordEncoder.encode(request.getPassword()),
                     request.getNombres(),
                     request.getApellidos(),
@@ -64,7 +65,7 @@ public class MedicoTerapistaService implements IMedicoTerapistaService {
             return medicoTerapistaRepository.save(medico);
 
         } catch (Exception e) {
-            keycloakAdminService.eliminarUsuario(request.getUsername());
+            keycloakAdminService.eliminarUsuario(username);
             throw new RegistroException("Error al guardar el médico: " + e.getMessage());
         }
     }
