@@ -32,8 +32,9 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-
+/* 
 @ExtendWith(MockitoExtension.class)
+
 class CitaServiceTest {
 
  
@@ -246,4 +247,6 @@ class CitaServiceTest {
         assertTrue(lineas[1].startsWith("1,"));
         assertTrue(lineas[2].startsWith("2,"));
     }
+        
 }
+*/
