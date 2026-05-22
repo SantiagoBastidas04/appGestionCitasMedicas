@@ -88,8 +88,14 @@
                 <td class="tenue">{{ c.registradoPor || '—' }}</td>
                 <td class="obs">{{ c.observacion || '—' }}</td>
                 <td>
-                  <AppButton v-if="c.estado !== 'CANCELADA'" variante="peligro" :small="true"
-                    @click="cancelar(c.id)">Cancelar</AppButton>
+                  <div v-if="c.estado !== 'CANCELADA'" class="acciones-cita">
+                    <AppButton variante="contorno" :small="true" @click="abrirReagendar(c)">
+                      Reagendar
+                    </AppButton>
+                    <AppButton variante="peligro" :small="true" @click="cancelar(c.id)">
+                      Cancelar
+                    </AppButton>
+                  </div>
                   <span v-else class="cancelada">Cancelada</span>
                 </td>
               </tr>
@@ -99,6 +105,20 @@
       </template>
     </template>
   </div>
+
+  <ModalReagendarCita
+    :visible="mostrarReagendar"
+    :cita="citaSeleccionada"
+    :fecha="reagendarForm.fecha"
+    :hora="reagendarForm.hora"
+    :errores="erroresReagendar"
+    :error="errorReagendar"
+    :loading="reagendando"
+    @update:fecha="actualizarFechaReagendar"
+    @update:hora="val => (reagendarForm.hora = val)"
+    @confirmar="confirmarReagendar"
+    @cerrar="cerrarReagendar"
+  />
 </template>
 
 <script setup>
@@ -109,6 +129,7 @@ import AppButton  from '../components/atoms/AppButton.vue'
 import AppBadge   from '../components/atoms/AppBadge.vue'
 import AppAlerta  from '../components/atoms/AppAlerta.vue'
 import AppSpinner from '../components/atoms/AppSpinner.vue'
+import ModalReagendarCita from '../components/organisms/ModalReagendarCita.vue'
 import { useMedicos }  from '../composables/useMedicos.js'
 import { useToast }    from '../composables/useToast.js'
 import { citaService } from '../services/api.js'
@@ -124,6 +145,12 @@ const mensajeError = ref('')
 const cargando     = ref(false)
 const exportando   = ref(false)
 const errores      = ref({})
+const mostrarReagendar = ref(false)
+const citaSeleccionada = ref(null)
+const reagendando       = ref(false)
+const errorReagendar    = ref('')
+const erroresReagendar  = ref({})
+const reagendarForm     = ref({ fecha: '', hora: null })
 
 async function buscar() {
   errores.value = {}
@@ -151,6 +178,52 @@ async function cancelar(id) {
     buscar()
   } catch (e) {
     toast('Error al cancelar: ' + e.message, 'err')
+  }
+}
+
+function abrirReagendar(cita) {
+  citaSeleccionada.value = cita
+  reagendarForm.value = { fecha: cita.fecha, hora: null }
+  erroresReagendar.value = {}
+  errorReagendar.value = ''
+  mostrarReagendar.value = true
+}
+
+function cerrarReagendar() {
+  mostrarReagendar.value = false
+}
+
+function actualizarFechaReagendar(nuevaFecha) {
+  reagendarForm.value = { fecha: nuevaFecha, hora: null }
+}
+
+async function confirmarReagendar() {
+  if (!citaSeleccionada.value) return
+
+  erroresReagendar.value = {}
+  errorReagendar.value = ''
+
+  if (!reagendarForm.value.fecha) {
+    erroresReagendar.value.fecha = 'Seleccione la fecha'
+  }
+  if (!reagendarForm.value.hora) {
+    erroresReagendar.value.hora = 'Seleccione la hora'
+  }
+  if (Object.keys(erroresReagendar.value).length) return
+
+  reagendando.value = true
+  try {
+    await citaService.reagendar(citaSeleccionada.value.id, {
+      nuevaFecha: reagendarForm.value.fecha,
+      nuevaHora: reagendarForm.value.hora,
+    })
+    toast('Cita reagendada correctamente')
+    mostrarReagendar.value = false
+    await buscar()
+  } catch (e) {
+    errorReagendar.value = e.message || 'Error al reagendar la cita'
+  } finally {
+    reagendando.value = false
   }
 }
 
@@ -215,6 +288,7 @@ tbody td { padding: 13px 16px; vertical-align: middle; }
 .tenue { font-size: 13px; color: var(--texto-suave); }
 .obs   { font-size: 13px; color: var(--texto-suave); max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .cancelada { font-size: 12px; color: var(--texto-tenue); }
+.acciones-cita { display: flex; gap: 8px; flex-wrap: wrap; }
 
 /* ── Empty state ── */
 .empty-state { text-align: center; padding: 56px 24px; }
