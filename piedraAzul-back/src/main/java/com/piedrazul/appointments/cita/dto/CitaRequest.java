@@ -16,7 +16,7 @@ public class CitaRequest {
 
     @NotNull(message = "El id del paciente es obligatorio")
     private Long pacienteId;
-
+    
     @NotNull(message = "La fecha es obligatoria")
     private LocalDate fecha;
 

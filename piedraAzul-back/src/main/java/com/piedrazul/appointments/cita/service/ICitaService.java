@@ -1,8 +1,8 @@
 package com.piedrazul.appointments.cita.service;
 
+import com.piedrazul.appointments.cita.dto.CitaRequest;
 import com.piedrazul.appointments.cita.entity.Cita;
 import com.piedrazul.appointments.medico.entity.MedicoTerapista;
-import com.piedrazul.appointments.paciente.entity.Paciente;
 import com.piedrazul.appointments.shared.entity.Usuario;
 
 import java.time.*;
@@ -13,7 +13,9 @@ public interface ICitaService {
 
     List<Cita> listarCitasPorPaciente(Long pacienteId);
 
-    Cita crearCita(MedicoTerapista medico, Paciente paciente, LocalDate fecha, LocalTime hora, Usuario registradoPor, String observacion);
+   
+    
+    Cita crearCita(CitaRequest request, Usuario registradoPor);
 
     Cita reAgendarCita(Long citaId, LocalDate nuevaFecha, LocalTime nuevaHora, Usuario modificadoPor);
 
@@ -24,4 +26,7 @@ public interface ICitaService {
     Optional<Cita> buscarCitaPorId(Long id);
 
     Cita cancelarCita(Long id);
+
+    String generarCSV(Long medicoId, LocalDate fecha);
+    
 }

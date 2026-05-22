@@ -6,9 +6,7 @@ import com.piedrazul.appointments.cita.dto.CitaResponse;
 import com.piedrazul.appointments.cita.entity.Cita;
 import com.piedrazul.appointments.cita.service.ICitaService;
 import com.piedrazul.appointments.cita.mapper.CitaMapper;
-import com.piedrazul.appointments.medico.entity.MedicoTerapista;
 import com.piedrazul.appointments.medico.service.IMedicoTerapistaService;
-import com.piedrazul.appointments.paciente.entity.Paciente;
 import com.piedrazul.appointments.paciente.service.IPacienteService;
 import com.piedrazul.appointments.shared.security.AuthUtils;
 import com.piedrazul.appointments.shared.entity.Usuario;
@@ -32,8 +30,6 @@ import java.util.List;
 public class CitaController {
 
     private final ICitaService citaService;
-    private final IPacienteService pacienteService;
-    private final IMedicoTerapistaService medicoService;
     private final CitaMapper citaMapper;
     private final AuthUtils authUtils;
 
@@ -60,8 +56,8 @@ public class CitaController {
         return ResponseEntity.ok(citas);
     }
 
-    @PostMapping
-    public ResponseEntity<CitaResponse> crearCita(
+
+    /*public ResponseEntity<CitaResponse> crearCita(
             @Valid @RequestBody CitaRequest request) {
 
         MedicoTerapista medico = medicoService.buscarPorId(request.getMedicoId())
@@ -88,6 +84,16 @@ public class CitaController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(citaMapper.toResponse(cita));
+    }*/
+    @PostMapping
+    public ResponseEntity<CitaResponse> crearCita(
+                    @Valid @RequestBody CitaRequest request) {
+
+            Usuario registradoPor = authUtils.getUsuarioAutenticado();
+            Cita cita = citaService.crearCita(request, registradoPor);
+
+            return ResponseEntity.status(HttpStatus.CREATED)
+                            .body(citaMapper.toResponse(cita));
     }
 
     @PutMapping("/{id}/reagendar")
@@ -127,32 +133,17 @@ public class CitaController {
 
     @GetMapping("/medico/{medicoId}/fecha/{fecha}/export/csv")
     public ResponseEntity<String> exportarCitasCSV(
-            @PathVariable Long medicoId,
-            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha
-    ) {
-        List<Cita> citas = citaService.listarCitasPorMedicoYFecha(
-                medicoId,
-                fecha);
-        StringBuilder csv = new StringBuilder();
-        csv.append("Orden,Hora,Nombre Paciente,Documento,Celular,Estado,Observacion\n");
-        int orden = 1;
-        for (Cita cita : citas) {
-            String nombre = cita.getPaciente().getNombres() + " " + cita.getPaciente().getApellidos();
-            String observacion = cita.getObservacion() != null ? cita.getObservacion().replace(",", ";").replace("\"", "\"\"") : "";
-            csv.append(String.format("%d,%s,%s,%s,%s,%s,%s\n",
-                    orden++,
-                    cita.getHora().format(DateTimeFormatter.ofPattern("HH:mm")),
-                    nombre,
-                    cita.getPaciente().getNumeroDocumento(),
-                    cita.getPaciente().getCelular(),
-                    cita.getEstado().name(),
-                    observacion));
-        }
-        String filename = "citas_medico" + medicoId + "_" + fecha + ".csv";
-        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"").
-                contentType(MediaType.parseMediaType("text/csv; charset=UTF-8")).
-                body(csv.toString());
+                    @PathVariable Long medicoId,
+                    @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha) {
 
+            String csv = citaService.generarCSV(medicoId, fecha);
+            String filename = "citas_medico" + medicoId + "_" + fecha + ".csv";
+
+            return ResponseEntity.ok()
+                            .header(HttpHeaders.CONTENT_DISPOSITION,
+                                            "attachment; filename=\"" + filename + "\"")
+                            .contentType(MediaType.parseMediaType("text/csv; charset=UTF-8"))
+                            .body(csv);
     }
 
 }

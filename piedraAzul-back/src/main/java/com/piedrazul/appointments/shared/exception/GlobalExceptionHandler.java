@@ -98,4 +98,19 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.CONFLICT).body(respuesta);
     }
+    
+    @ExceptionHandler(CitaInvalidaException.class)
+    public ResponseEntity<Map<String, Object>> handleCitaInvalida(
+            CitaInvalidaException ex,
+            HttpServletRequest request) {
+
+        Map<String, Object> respuesta = new LinkedHashMap<>();
+        respuesta.put("timestamp", LocalDateTime.now().toString());
+        respuesta.put("status", 400);
+        respuesta.put("error", "Cita inválida");
+        respuesta.put("mensaje", ex.getMessage());
+        respuesta.put("path", request.getRequestURI());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(respuesta);
+    }
 }
