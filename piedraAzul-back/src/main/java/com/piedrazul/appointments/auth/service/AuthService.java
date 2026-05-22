@@ -32,8 +32,12 @@ public class AuthService implements IAuthService {
                     request.getApellidos(),
                     "PACIENTE"
             );
-        } catch (KeycloakAdminService.KeycloakUserCreationException e) {
+        } catch (KeycloakAdminService.KeycloakBadRequestException e) {
+            throw new KeycloakValidationException(e.getMessage());
+        } catch (KeycloakAdminService.KeycloakConflictException e) {
             throw new UsuarioDuplicadoException(username);
+        } catch (KeycloakAdminService.KeycloakServiceException e) {
+            throw new RegistroException(e.getMessage());
         }
 
         // 2. Guardar en H2 con rollback si falla

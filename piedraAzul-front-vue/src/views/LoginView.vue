@@ -134,7 +134,7 @@ async function hacerLogin() {
     await login(loginForm.username, loginForm.password)
     toast('¡Bienvenido!')
   } catch (e) {
-    errorLogin.value = 'Usuario o contraseña incorrectos'
+    errorLogin.value = e?.message || 'Usuario o contraseña incorrectos'
   } finally {
     cargando.value = false
   }
@@ -158,6 +158,10 @@ async function hacerRegistro() {
   for (const [campo, label] of Object.entries(req)) {
     if (!regForm[campo]) { errReg[campo] = `${label} es obligatorio`; ok = false }
   }
+  if (regForm.username && regForm.username.trim().length < 3) {
+    errReg.username = 'El usuario debe tener al menos 3 caracteres'
+    ok = false
+  }
   if (regForm.password && regForm.password.length < 6) {
     errReg.password = 'Mínimo 6 caracteres'; ok = false
   }
@@ -178,7 +182,18 @@ async function hacerRegistro() {
     })
     toast('¡Cuenta creada! Bienvenido.')
   } catch (e) {
-    errorRegistro.value = e.message || 'Error al registrarse. Intente nuevamente.'
+    if (Array.isArray(e?.fieldErrors) && e.fieldErrors.length) {
+      const fieldMap = {
+        numeroDocumento: 'documento',
+        correoElectronico: 'correo',
+        fechaNacimiento: 'nacimiento',
+      }
+      e.fieldErrors.forEach(({ campo, mensaje }) => {
+        const localField = fieldMap[campo] || campo
+        errReg[localField] = mensaje
+      })
+    }
+    errorRegistro.value = e?.message || 'Error al registrarse. Intente nuevamente.'
   } finally {
     cargando.value = false
   }

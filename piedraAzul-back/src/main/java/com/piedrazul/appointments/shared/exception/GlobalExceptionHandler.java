@@ -1,5 +1,6 @@
 package com.piedrazul.appointments.shared.exception;
 
+import com.piedrazul.appointments.shared.security.KeycloakAdminService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +38,66 @@ public class GlobalExceptionHandler {
         respuesta.put("campos", campos);
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(respuesta);
+    }
+
+    @ExceptionHandler(KeycloakValidationException.class)
+    public ResponseEntity<Map<String, Object>> handleKeycloakValidation(
+            KeycloakValidationException ex,
+            HttpServletRequest request) {
+
+        Map<String, Object> respuesta = new LinkedHashMap<>();
+        respuesta.put("timestamp", LocalDateTime.now().toString());
+        respuesta.put("status", 400);
+        respuesta.put("error", "Datos inválidos");
+        respuesta.put("mensaje", ex.getMessage());
+        respuesta.put("path", request.getRequestURI());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(respuesta);
+    }
+
+    @ExceptionHandler(KeycloakAdminService.KeycloakBadRequestException.class)
+    public ResponseEntity<Map<String, Object>> handleKeycloakBadRequest(
+            KeycloakAdminService.KeycloakBadRequestException ex,
+            HttpServletRequest request) {
+
+        Map<String, Object> respuesta = new LinkedHashMap<>();
+        respuesta.put("timestamp", LocalDateTime.now().toString());
+        respuesta.put("status", 400);
+        respuesta.put("error", "Datos inválidos");
+        respuesta.put("mensaje", ex.getMessage());
+        respuesta.put("path", request.getRequestURI());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(respuesta);
+    }
+
+    @ExceptionHandler(KeycloakAdminService.KeycloakConflictException.class)
+    public ResponseEntity<Map<String, Object>> handleKeycloakConflict(
+            KeycloakAdminService.KeycloakConflictException ex,
+            HttpServletRequest request) {
+
+        Map<String, Object> respuesta = new LinkedHashMap<>();
+        respuesta.put("timestamp", LocalDateTime.now().toString());
+        respuesta.put("status", 409);
+        respuesta.put("error", "Usuario duplicado");
+        respuesta.put("mensaje", ex.getMessage());
+        respuesta.put("path", request.getRequestURI());
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(respuesta);
+    }
+
+    @ExceptionHandler(KeycloakAdminService.KeycloakServiceException.class)
+    public ResponseEntity<Map<String, Object>> handleKeycloakService(
+            KeycloakAdminService.KeycloakServiceException ex,
+            HttpServletRequest request) {
+
+        Map<String, Object> respuesta = new LinkedHashMap<>();
+        respuesta.put("timestamp", LocalDateTime.now().toString());
+        respuesta.put("status", 500);
+        respuesta.put("error", "Error en el registro");
+        respuesta.put("mensaje", ex.getMessage());
+        respuesta.put("path", request.getRequestURI());
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(respuesta);
     }
 
     @ExceptionHandler(UsuarioDuplicadoException.class)

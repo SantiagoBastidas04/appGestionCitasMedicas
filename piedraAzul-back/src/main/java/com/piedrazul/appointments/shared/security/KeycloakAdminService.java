@@ -50,7 +50,9 @@ public class KeycloakAdminService {
      * @param nombres   para el campo firstName de Keycloak
      * @param apellidos para el campo lastName de Keycloak
      * @param rol       nombre exacto del rol en Keycloak (ej. "PACIENTE")
-     * @throws KeycloakUserCreationException si algo falla en Keycloak
+    * @throws KeycloakConflictException si el username ya existe en Keycloak
+    * @throws KeycloakBadRequestException si hay un error de validación
+    * @throws KeycloakServiceException si algo falla en Keycloak
      */
     public void crearUsuario(String username, String password,
                              String nombres, String apellidos, String rol) {
@@ -64,13 +66,23 @@ public class KeycloakAdminService {
             log.info("Usuario '{}' creado en Keycloak con rol '{}'", username, rol);
 
         } catch (HttpClientErrorException.Conflict e) {
-            throw new KeycloakUserCreationException(
+            throw new KeycloakConflictException(
                     "El username '" + username + "' ya existe en Keycloak");
+        } catch (HttpClientErrorException.BadRequest e) {
+            throw new KeycloakBadRequestException(buildBadRequestMessage(e));
         } catch (Exception e) {
             log.error("Error creando usuario en Keycloak: {}", e.getMessage());
-            throw new KeycloakUserCreationException(
+            throw new KeycloakServiceException(
                     "Error al registrar usuario en el sistema de autenticación: " + e.getMessage());
         }
+    }
+
+    private String buildBadRequestMessage(HttpClientErrorException.BadRequest e) {
+        String body = e.getResponseBodyAsString();
+        if (body == null || body.isBlank()) {
+            return "Error de validación en Keycloak";
+        }
+        return "Error de validación en Keycloak: " + body;
     }
 
     /**
@@ -136,7 +148,7 @@ public class KeycloakAdminService {
 
         String location = response.getHeaders().getFirst(HttpHeaders.LOCATION);
         if (location == null) {
-            throw new KeycloakUserCreationException("Keycloak no devolvió el ID del usuario creado");
+            throw new KeycloakServiceException("Keycloak no devolvió el ID del usuario creado");
         }
         return location.substring(location.lastIndexOf('/') + 1);
     }
@@ -196,8 +208,20 @@ public class KeycloakAdminService {
     }
 
 
-    public static class KeycloakUserCreationException extends RuntimeException {
-        public KeycloakUserCreationException(String message) {
+    public static class KeycloakConflictException extends RuntimeException {
+        public KeycloakConflictException(String message) {
+            super(message);
+        }
+    }
+
+    public static class KeycloakBadRequestException extends RuntimeException {
+        public KeycloakBadRequestException(String message) {
+            super(message);
+        }
+    }
+
+    public static class KeycloakServiceException extends RuntimeException {
+        public KeycloakServiceException(String message) {
             super(message);
         }
     }
