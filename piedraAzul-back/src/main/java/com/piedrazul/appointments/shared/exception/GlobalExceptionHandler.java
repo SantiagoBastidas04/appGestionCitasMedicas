@@ -159,7 +159,7 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.CONFLICT).body(respuesta);
     }
-    
+
     @ExceptionHandler(CitaInvalidaException.class)
     public ResponseEntity<Map<String, Object>> handleCitaInvalida(
             CitaInvalidaException ex,

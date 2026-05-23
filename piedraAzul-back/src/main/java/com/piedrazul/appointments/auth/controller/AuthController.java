@@ -18,14 +18,13 @@ public class AuthController {
 
     private final IAuthService authService;
     private final PacienteMapper pacienteMapper;
-    
-   /*Se deja el controlador sin logica y se la asigna al servicio */
-   @PostMapping("/registro")
-   public ResponseEntity<PacienteResponse> registro
-   (@Valid @RequestBody RegistroPacienteRequest registroPacienteRequest)
-    { 
-        Paciente paciente = authService.registrarPaciente(registroPacienteRequest); 
+
+
+    @PostMapping("/registro")
+    public ResponseEntity<PacienteResponse> registro
+    (@Valid @RequestBody RegistroPacienteRequest registroPacienteRequest) {
+        Paciente paciente = authService.registrarPaciente(registroPacienteRequest);
         return ResponseEntity.ok(pacienteMapper.toResponse(paciente));
-   }
-   
+    }
+
 }

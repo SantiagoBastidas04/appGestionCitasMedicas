@@ -50,9 +50,9 @@ public class KeycloakAdminService {
      * @param nombres   para el campo firstName de Keycloak
      * @param apellidos para el campo lastName de Keycloak
      * @param rol       nombre exacto del rol en Keycloak (ej. "PACIENTE")
-    * @throws KeycloakConflictException si el username ya existe en Keycloak
-    * @throws KeycloakBadRequestException si hay un error de validación
-    * @throws KeycloakServiceException si algo falla en Keycloak
+     * @throws KeycloakConflictException   si el username ya existe en Keycloak
+     * @throws KeycloakBadRequestException si hay un error de validación
+     * @throws KeycloakServiceException    si algo falla en Keycloak
      */
     public void crearUsuario(String username, String password,
                              String nombres, String apellidos, String rol) {

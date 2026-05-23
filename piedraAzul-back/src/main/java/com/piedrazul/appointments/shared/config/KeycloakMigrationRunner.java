@@ -65,7 +65,7 @@ public class KeycloakMigrationRunner implements CommandLineRunner {
         log.info("Contraseña asignada a todos: '{}'", DEFAULT_PASSWORD);
     }
 
-    @SuppressWarnings("unchecked")
+
     private String obtenerTokenAdmin() {
         try {
             String url = KEYCLOAK_URL + "/realms/master/protocol/openid-connect/token";
@@ -137,7 +137,7 @@ public class KeycloakMigrationRunner implements CommandLineRunner {
         restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<>(body, headers), Void.class);
     }
 
-    @SuppressWarnings("unchecked")
+
     private void asignarRol(String adminToken, String userId, String rolNombre) {
         String urlRol = KEYCLOAK_URL + "/admin/realms/" + REALM + "/roles/" + rolNombre;
         HttpHeaders headers = new HttpHeaders();

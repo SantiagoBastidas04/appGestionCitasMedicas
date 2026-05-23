@@ -15,9 +15,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthService implements IAuthService {
 
-    private final IPacienteService   pacienteService;
+    private final IPacienteService pacienteService;
     private final KeycloakAdminService keycloakAdminService;
-    private final PasswordEncoder    passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public Paciente registrarPaciente(RegistroPacienteRequest request) {

@@ -11,7 +11,6 @@ import com.piedrazul.appointments.paciente.entity.Paciente;
 import com.piedrazul.appointments.paciente.repository.PacienteRepository;
 import com.piedrazul.appointments.shared.enums.EstadoCita;
 import com.piedrazul.appointments.shared.exception.CitaInvalidaException;
-import com.piedrazul.appointments.shared.security.AuthUtils;
 import com.piedrazul.appointments.shared.entity.Usuario;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +23,6 @@ import java.util.*;
 @Service
 
 public class CitaService implements ICitaService {
-    
-    public  AuthUtils authUtils;
 
     @Autowired
     private CitaRepository citaRepository;
@@ -41,20 +38,23 @@ public class CitaService implements ICitaService {
 
     @Override
     public List<Cita> listarCitasPorMedicoYFecha(Long medicoId, LocalDate fecha) {
-        MedicoTerapista medico = medicoTerapistaRepository.findById(medicoId).orElseThrow(() -> new RuntimeException("Medico no encontrado con el id: " + medicoId));
+        MedicoTerapista medico = medicoTerapistaRepository.findById(medicoId)
+                .orElseThrow(() -> new RuntimeException("Medico no encontrado con el id: " + medicoId));
         return citaRepository.findByMedicoAndFechaAndEstadoNot(medico, fecha, EstadoCita.CANCELADA);
     }
+
     @Override
     public List<Cita> listarCitasPorPaciente(Long pacienteId) {
         return citaRepository.findByPacienteId(pacienteId);
     }
-   
+
     @Override
     @Transactional
     public Cita reAgendarCita(Long citaId, LocalDate nuevaFecha, LocalTime nuevaHora, Usuario modificadoPor) {
-        Cita cita = citaRepository.findById(citaId).orElseThrow(() -> new RuntimeException("Cita no encontrada con el id: " + citaId));
+        Cita cita = citaRepository.findById(citaId)
+                .orElseThrow(() -> new RuntimeException("Cita no encontrada con el id: " + citaId));
         HistorialCita historialCita = new HistorialCita(cita, cita.getFecha(), cita.getHora(), modificadoPor);
-        historialCitaRepository.save(historialCita);
+
         // 1. No reagendar una cita cancelada
         if (cita.getEstado() == EstadoCita.CANCELADA) {
             throw new CitaInvalidaException(
@@ -91,19 +91,20 @@ public class CitaService implements ICitaService {
         validadDisponibilidad(cita.getMedico(), nuevaFecha, nuevaHora);
         cita.setFecha(nuevaFecha);
         cita.setHora(nuevaHora);
+        historialCitaRepository.save(historialCita);
         return citaRepository.save(cita);
     }
 
     @Override
     public List<LocalTime> calcularFranjasDisponibles(Long medicoId, LocalDate fecha) {
-        MedicoTerapista medico = medicoTerapistaRepository.findById(medicoId).orElseThrow(() -> new RuntimeException("Medico no encontrado con el id: " + medicoId));
+        MedicoTerapista medico = medicoTerapistaRepository.findById(medicoId)
+                .orElseThrow(() -> new RuntimeException("Medico no encontrado con el id: " + medicoId));
         if (!medico.getDiasAtencion().contains(fecha.getDayOfWeek())) {
             return new ArrayList<>();
         }
         // Obtener horas ya ocupadas
         List<LocalTime> horasOcupadas = citaRepository.findHorasOcupadasByMedicoAndFecha(
-                medico, fecha, EstadoCita.CANCELADA
-        );
+                medico, fecha, EstadoCita.CANCELADA);
 
         // Generar todas las franjas posibles según el intervalo
         List<LocalTime> franjasDisponibles = new ArrayList<>();
@@ -124,8 +125,7 @@ public class CitaService implements ICitaService {
         if (citaRepository.existsByMedicoAndFechaAndHoraAndEstadoNot(
                 medico, fecha, hora, EstadoCita.CANCELADA)) {
             throw new IllegalArgumentException(
-                    "El médico ya tiene una cita agendada para esa fecha y hora"
-            );
+                    "El médico ya tiene una cita agendada para esa fecha y hora");
         }
     }
 
@@ -137,13 +137,14 @@ public class CitaService implements ICitaService {
     @Override
     @Transactional
     public Cita cancelarCita(Long id) {
-        Cita cita = citaRepository.findById(id).orElseThrow(() -> new RuntimeException("Cita no encontrada con el id: " + id));
+        Cita cita = citaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cita no encontrada con el id: " + id));
         cita.setEstado(EstadoCita.CANCELADA);
         return citaRepository.save(cita);
     }
-    
+
     @Override
-@Transactional
+    @Transactional
     public Cita crearCita(CitaRequest request, Usuario registradoPor) {
 
         MedicoTerapista medico = medicoTerapistaRepository.findById(request.getMedicoId())
@@ -188,7 +189,7 @@ public class CitaService implements ICitaService {
 
         return citaRepository.save(cita);
     }
-   
+
     @Override
     public String generarCSV(Long medicoId, LocalDate fecha) {
         List<Cita> citas = listarCitasPorMedicoYFecha(medicoId, fecha);

@@ -13,8 +13,6 @@ public interface ICitaService {
 
     List<Cita> listarCitasPorPaciente(Long pacienteId);
 
-   
-    
     Cita crearCita(CitaRequest request, Usuario registradoPor);
 
     Cita reAgendarCita(Long citaId, LocalDate nuevaFecha, LocalTime nuevaHora, Usuario modificadoPor);
@@ -28,5 +26,5 @@ public interface ICitaService {
     Cita cancelarCita(Long id);
 
     String generarCSV(Long medicoId, LocalDate fecha);
-    
+
 }
