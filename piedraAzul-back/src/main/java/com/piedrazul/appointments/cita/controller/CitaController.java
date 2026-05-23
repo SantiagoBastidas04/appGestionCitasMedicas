@@ -91,16 +91,17 @@ public class CitaController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<CitaResponse> cancelarCita(@PathVariable Long id) {
+        Usuario usuario = authUtils.getUsuarioAutenticado();
         return ResponseEntity.ok(
-                citaMapper.toResponse(citaService.cancelarCita(id)));
+                citaMapper.toResponse(citaService.cancelarCita(id, usuario)));
     }
-
     @GetMapping("/medico/{medicoId}/fecha/{fecha}/export/csv")
     public ResponseEntity<String> exportarCitasCSV(
             @PathVariable Long medicoId,
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha) {
 
-        String csv = citaService.generarCSV(medicoId, fecha);
+        Usuario usuario = authUtils.getUsuarioAutenticado();
+        String csv = citaService.generarCSV(medicoId, fecha, usuario);
         String filename = "citas_medico" + medicoId + "_" + fecha + ".csv";
 
         return ResponseEntity.ok()

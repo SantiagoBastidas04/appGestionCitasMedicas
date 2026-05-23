@@ -174,4 +174,19 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(respuesta);
     }
+
+    @ExceptionHandler(AccesoDenegadoException.class)
+    public ResponseEntity<Map<String, Object>> handleAccesoDenegado(
+            AccesoDenegadoException ex,
+            HttpServletRequest request) {
+
+        Map<String, Object> respuesta = new LinkedHashMap<>();
+        respuesta.put("timestamp", LocalDateTime.now().toString());
+        respuesta.put("status", 403);
+        respuesta.put("error", "Acceso denegado");
+        respuesta.put("mensaje", ex.getMessage());
+        respuesta.put("path", request.getRequestURI());
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(respuesta);
+    }
 }

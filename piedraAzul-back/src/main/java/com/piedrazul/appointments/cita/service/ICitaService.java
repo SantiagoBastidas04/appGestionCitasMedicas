@@ -23,8 +23,8 @@ public interface ICitaService {
 
     Optional<Cita> buscarCitaPorId(Long id);
 
-    Cita cancelarCita(Long id);
+    Cita cancelarCita(Long id, Usuario usuario);
 
-    String generarCSV(Long medicoId, LocalDate fecha);
+    String generarCSV(Long medicoId, LocalDate fecha, Usuario usuario);
 
 }

@@ -64,7 +64,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/api/citas/*/reagendar")
                         .hasAnyRole("ADMINISTRADOR", "AGENDADOR", "MEDICO_TERAPISTA")
                         .requestMatchers(HttpMethod.DELETE, "/api/citas/**")
-                        .hasAnyRole("ADMINISTRADOR", "AGENDADOR")
+                        .hasAnyRole("ADMINISTRADOR", "AGENDADOR","MEDICO_TERAPISTA")
                         .requestMatchers(HttpMethod.GET, "/api/citas/paciente/**")
                         .hasAnyRole("ADMINISTRADOR", "AGENDADOR", "MEDICO_TERAPISTA", "PACIENTE")
                         .requestMatchers(HttpMethod.GET, "/api/citas/*/export/csv")

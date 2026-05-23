@@ -10,6 +10,7 @@ import com.piedrazul.appointments.medico.repository.MedicoTerapistaRepository;
 import com.piedrazul.appointments.paciente.entity.Paciente;
 import com.piedrazul.appointments.paciente.repository.PacienteRepository;
 import com.piedrazul.appointments.shared.enums.EstadoCita;
+import com.piedrazul.appointments.shared.exception.AccesoDenegadoException;
 import com.piedrazul.appointments.shared.exception.CitaInvalidaException;
 import com.piedrazul.appointments.shared.entity.Usuario;
 import jakarta.transaction.Transactional;
@@ -55,6 +56,10 @@ public class CitaService implements ICitaService {
                 .orElseThrow(() -> new RuntimeException("Cita no encontrada con el id: " + citaId));
         HistorialCita historialCita = new HistorialCita(cita, cita.getFecha(), cita.getHora(), modificadoPor);
 
+        if (modificadoPor instanceof MedicoTerapista medico &&
+                !cita.getMedico().getId().equals(medico.getId())) {
+            throw new AccesoDenegadoException("No puede reagendar citas de otro médico.");
+        }
         // 1. No reagendar una cita cancelada
         if (cita.getEstado() == EstadoCita.CANCELADA) {
             throw new CitaInvalidaException(
@@ -136,9 +141,15 @@ public class CitaService implements ICitaService {
 
     @Override
     @Transactional
-    public Cita cancelarCita(Long id) {
+    public Cita cancelarCita(Long id, Usuario usuario) {
         Cita cita = citaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cita no encontrada con el id: " + id));
+
+        if (usuario instanceof MedicoTerapista medico &&
+                !cita.getMedico().getId().equals(medico.getId())) {
+            throw new AccesoDenegadoException("No puede cancelar citas de otro médico.");
+        }
+
         cita.setEstado(EstadoCita.CANCELADA);
         return citaRepository.save(cita);
     }
@@ -191,7 +202,12 @@ public class CitaService implements ICitaService {
     }
 
     @Override
-    public String generarCSV(Long medicoId, LocalDate fecha) {
+    public String generarCSV(Long medicoId, LocalDate fecha, Usuario usuario) {
+
+        if (usuario instanceof MedicoTerapista medico &&
+                !medico.getId().equals(medicoId)) {
+            throw new AccesoDenegadoException("No puede exportar citas de otro médico.");
+        }
         List<Cita> citas = listarCitasPorMedicoYFecha(medicoId, fecha);
 
         StringBuilder csv = new StringBuilder();
