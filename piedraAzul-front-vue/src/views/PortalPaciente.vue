@@ -7,6 +7,23 @@
       </div>
     </div>
 
+    <!-- ═══ CITA CONFIRMADA → BANNER ═══ -->
+    <div v-if="citaConfirmada" class="banner-exito">
+      <div class="banner-icono">
+        <svg width="28" height="28" fill="none" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10" fill="#0D6B4E"/>
+          <path d="M7 12l4 4 6-7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div>
+        <h3>¡Cita agendada exitosamente!</h3>
+        <p>Su cita quedó registrada. Puede ver el detalle a continuación.</p>
+      </div>
+      <AppButton variante="contorno" @click="agendarOtra" style="margin-left:auto; flex-shrink:0;">
+        Agendar otra cita
+      </AppButton>
+    </div>
+
     <!-- ═══ FORMULARIO NUEVA CITA ═══ -->
     <template v-if="!citaConfirmada">
 
@@ -77,68 +94,48 @@
 
     </template>
 
-    <!-- ═══ CITA CONFIRMADA → MIS CITAS ═══ -->
-    <template v-else>
-      <!-- Banner de éxito -->
-      <div class="banner-exito">
-        <div class="banner-icono">
-          <svg width="28" height="28" fill="none" viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="10" fill="#0D6B4E"/>
-            <path d="M7 12l4 4 6-7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
-        <div>
-          <h3>¡Cita agendada exitosamente!</h3>
-          <p>Su cita quedó registrada. Puede ver el detalle a continuación.</p>
-        </div>
-        <AppButton variante="contorno" @click="agendarOtra" style="margin-left:auto; flex-shrink:0;">
-          Agendar otra cita
-        </AppButton>
+    <!-- Mis citas -->
+    <AppCard titulo="Mis citas" subtitulo="Historial de citas registradas a su nombre">
+      <template #icono>
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24">
+          <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" stroke="currentColor" stroke-width="1.5"/>
+          <rect x="9" y="3" width="6" height="4" rx="1" stroke="currentColor" stroke-width="1.5"/>
+        </svg>
+      </template>
+
+      <div v-if="cargandoCitas" class="estado-centro">
+        <AppSpinner :verde="true" :size="28" />
+        <p>Cargando sus citas...</p>
       </div>
 
-      <!-- Mis citas -->
-      <AppCard titulo="Mis citas" subtitulo="Historial de citas registradas a su nombre">
-        <template #icono>
-          <svg width="16" height="16" fill="none" viewBox="0 0 24 24">
-            <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" stroke="currentColor" stroke-width="1.5"/>
-            <rect x="9" y="3" width="6" height="4" rx="1" stroke="currentColor" stroke-width="1.5"/>
-          </svg>
-        </template>
+      <AppAlerta v-else-if="!misCitas.length" tipo="info" titulo="Sin citas registradas">
+        Aún no tiene citas en el sistema.
+      </AppAlerta>
 
-        <div v-if="cargandoCitas" class="estado-centro">
-          <AppSpinner :verde="true" :size="28" />
-          <p>Cargando sus citas...</p>
-        </div>
-
-        <AppAlerta v-else-if="!misCitas.length" tipo="info" titulo="Sin citas registradas">
-          Aún no tiene citas en el sistema.
-        </AppAlerta>
-
-        <div v-else class="tabla-wrap">
-          <table>
-            <caption>Listado de citas programadas</caption>
-            <thead>
-              <tr>
-                <th>Profesional</th>
-                <th>Fecha</th>
-                <th>Hora</th>
-                <th>Estado</th>
-                <th>Observación</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="c in misCitas" :key="c.id">
-                <td><strong>{{ c.nombreMedico }}</strong></td>
-                <td>{{ formatFecha(c.fecha) }}</td>
-                <td><strong class="hora">{{ c.hora }}</strong></td>
-                <td><AppBadge :estado="c.estado" :texto="c.estado" /></td>
-                <td class="obs">{{ c.observacion || '—' }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </AppCard>
-    </template>
+      <div v-else class="tabla-wrap">
+        <table>
+          <caption>Listado de citas programadas</caption>
+          <thead>
+            <tr>
+              <th>Profesional</th>
+              <th>Fecha</th>
+              <th>Hora</th>
+              <th>Estado</th>
+              <th>Observación</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="c in misCitas" :key="c.id">
+              <td><strong>{{ c.nombreMedico }}</strong></td>
+              <td>{{ formatFecha(c.fecha) }}</td>
+              <td><strong class="hora">{{ c.hora }}</strong></td>
+              <td><AppBadge :estado="c.estado" :texto="c.estado" /></td>
+              <td class="obs">{{ c.observacion || '—' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </AppCard>
 
   </div>
 </template>
@@ -279,6 +276,7 @@ onMounted(async () => {
   try {
     const p = await pacienteService.getByUsername(usuario.value.username)
     pacienteId.value = p.id
+    await cargarMisCitas()
   } catch {}
 })
 </script>
