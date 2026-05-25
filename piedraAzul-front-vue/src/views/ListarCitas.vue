@@ -104,21 +104,20 @@
         </div>
       </template>
     </template>
+    <ModalReagendarCita
+      :visible="mostrarReagendar"
+      :cita="citaSeleccionada"
+      :fecha="reagendarForm.fecha"
+      :hora="reagendarForm.hora"
+      :errores="erroresReagendar"
+      :error="errorReagendar"
+      :loading="reagendando"
+      @update:fecha="actualizarFechaReagendar"
+      @update:hora="val => (reagendarForm.hora = val)"
+      @confirmar="confirmarReagendar"
+      @cerrar="cerrarReagendar"
+    />
   </div>
-
-  <ModalReagendarCita
-    :visible="mostrarReagendar"
-    :cita="citaSeleccionada"
-    :fecha="reagendarForm.fecha"
-    :hora="reagendarForm.hora"
-    :errores="erroresReagendar"
-    :error="errorReagendar"
-    :loading="reagendando"
-    @update:fecha="actualizarFechaReagendar"
-    @update:hora="val => (reagendarForm.hora = val)"
-    @confirmar="confirmarReagendar"
-    @cerrar="cerrarReagendar"
-  />
 </template>
 
 <script setup>
@@ -151,6 +150,14 @@ const reagendando       = ref(false)
 const errorReagendar    = ref('')
 const erroresReagendar  = ref({})
 const reagendarForm     = ref({ fecha: '', hora: null })
+
+function hoy() {
+  const now = new Date()
+  const y = now.getFullYear()
+  const m = String(now.getMonth() + 1).padStart(2, '0')
+  const d = String(now.getDate()).padStart(2, '0')
+  return `${y}-${m}-${d}`
+}
 
 async function buscar() {
   errores.value = {}
@@ -195,6 +202,17 @@ function cerrarReagendar() {
 
 function actualizarFechaReagendar(nuevaFecha) {
   reagendarForm.value = { fecha: nuevaFecha, hora: null }
+
+  if (!nuevaFecha) return
+  if (nuevaFecha < hoy()) {
+    erroresReagendar.value = { ...erroresReagendar.value, fecha: 'La fecha debe ser hoy o posterior' }
+    return
+  }
+
+  if (erroresReagendar.value.fecha) {
+    const { fecha, ...resto } = erroresReagendar.value
+    erroresReagendar.value = resto
+  }
 }
 
 async function confirmarReagendar() {
@@ -205,6 +223,9 @@ async function confirmarReagendar() {
 
   if (!reagendarForm.value.fecha) {
     erroresReagendar.value.fecha = 'Seleccione la fecha'
+  }
+  if (reagendarForm.value.fecha && reagendarForm.value.fecha < hoy()) {
+    erroresReagendar.value.fecha = 'La fecha debe ser hoy o posterior'
   }
   if (!reagendarForm.value.hora) {
     erroresReagendar.value.hora = 'Seleccione la hora'
