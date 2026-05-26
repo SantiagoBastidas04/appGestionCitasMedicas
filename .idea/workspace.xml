@@ -6,11 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="6aad22e7-9e5a-476e-bc3e-55c613f8faea" name="Changes" comment="fix: resgitro de pacientes sin username y contraseña">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/piedraAzul-back/src/main/java/com/piedrazul/appointments/cita/controller/CitaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/piedraAzul-back/src/main/java/com/piedrazul/appointments/cita/controller/CitaController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/piedraAzul-back/src/main/java/com/piedrazul/appointments/cita/service/CitaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/piedraAzul-back/src/main/java/com/piedrazul/appointments/cita/service/CitaService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/piedraAzul-back/src/main/java/com/piedrazul/appointments/cita/service/ICitaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/piedraAzul-back/src/main/java/com/piedrazul/appointments/cita/service/ICitaService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/piedraAzul-back/src/main/java/com/piedrazul/appointments/shared/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/piedraAzul-back/src/main/java/com/piedrazul/appointments/shared/config/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/piedraAzul-back/src/main/java/com/piedrazul/appointments/shared/exception/GlobalExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/piedraAzul-back/src/main/java/com/piedrazul/appointments/shared/exception/GlobalExceptionHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/piedraAzul-back/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/piedraAzul-back/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/piedraAzul-back/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/piedraAzul-back/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
