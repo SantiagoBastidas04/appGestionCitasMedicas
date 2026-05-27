@@ -1,18 +1,6 @@
-# ── Etapa 1: build ──────────────────────────────────────────
-FROM node:20-alpine AS build
-WORKDIR /app
-
-COPY package*.json ./
-RUN npm ci
-
-COPY . .
-RUN npm run build
-
-# ── Etapa 2: servir con nginx ────────────────────────────────
 FROM nginx:stable-alpine
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Configuración para que Vue Router (modo history) funcione
 RUN printf 'server {\n\
     listen 80;\n\
     root /usr/share/nginx/html;\n\
@@ -22,4 +10,6 @@ RUN printf 'server {\n\
     }\n\
 }\n' > /etc/nginx/conf.d/default.conf
 
-EXPOSE 80
+EXPOSE 8080
+
+CMD ["sh", "-c", "sed -i 's/listen 80;/listen 8080;/g' /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]
