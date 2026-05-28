@@ -1,13 +1,30 @@
 services:
 
+  db:
+    image: postgres:16-alpine
+    container_name: db-piedrazul
+    profiles: ["local"]  # Solo se inicia en desarrollo local, no en Railway
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-piedrazul}
+      POSTGRES_USER: ${POSTGRES_USER:-admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-admin}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d piedrazul"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: on-failure
+
   keycloak:
     image: quay.io/keycloak/keycloak:24.0.3
     container_name: keycloak-piedrazul
     ports:
       - "8180:8080"
     environment:
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-admin}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
     volumes:
       - ./piedraAzul-back/keycloak:/opt/keycloak/data/import
       - ./piedraAzul-back/keycloak/data:/opt/keycloak/data/h2
@@ -24,12 +41,19 @@ services:
     ports:
       - "8080:8080"
     environment:
-      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://keycloak:8080/realms/piedrazul/protocol/openid-connect/certs
-      KEYCLOAK_SERVER_URL: http://keycloak:8080
-      KEYCLOAK_REALM: piedrazul
-      KEYCLOAK_ADMIN_USERNAME: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
+      # PostgreSQL
+      DATABASE_URL: jdbc:postgresql://${DB_HOST:-db}:${DB_PORT:-5432}/${POSTGRES_DB:-piedrazul}
+      DB_USERNAME: ${POSTGRES_USER:-admin}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-admin}
+      # Keycloak
+      KEYCLOAK_URL: ${KEYCLOAK_URL:-http://keycloak:8080}
+      KEYCLOAK_JWK_URI: ${KEYCLOAK_JWK_URI:-http://keycloak:8080/realms/piedrazul/protocol/openid-connect/certs}
+      KEYCLOAK_REALM: ${KEYCLOAK_REALM:-piedrazul}
+      KEYCLOAK_ADMIN_USERNAME: ${KEYCLOAK_ADMIN:-admin}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
     depends_on:
+      db:
+        condition: service_healthy
       keycloak:
         condition: service_healthy
     restart: on-failure
@@ -38,9 +62,18 @@ services:
     build:
       context: ./piedraAzul-front-vue
       dockerfile: Dockerfile
+      args:
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:8080/api}
+        VITE_KEYCLOAK_URL: ${VITE_KEYCLOAK_URL:-http://localhost:8180}
+        VITE_KEYCLOAK_REALM: ${KEYCLOAK_REALM:-piedrazul}
+        VITE_KEYCLOAK_CLIENT: ${VITE_KEYCLOAK_CLIENT:-piedrazul-api}
+        VITE_KEYCLOAK_SECRET: ${VITE_KEYCLOAK_SECRET:-lU5PljMWMfq0sM9rTIJeNFgjvYVHGQDa}
     container_name: frontend-piedrazul
     ports:
       - "5173:80"
     depends_on:
       - backend
     restart: on-failure
+
+volumes:
+  postgres_data:
