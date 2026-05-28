@@ -107,13 +107,15 @@
 
 <script setup>
 import { ref, reactive } from 'vue'
+import { useRouter } from 'vue-router'
 import AppCampo  from '../components/atoms/AppCampo.vue'
 import AppButton from '../components/atoms/AppButton.vue'
 import AppAlerta from '../components/atoms/AppAlerta.vue'
 import { useAuth }  from '../composables/useAuth.js'
 import { useToast } from '../composables/useToast.js'
 
-const { login, registro } = useAuth()
+const router = useRouter()
+const { login, registro, esPaciente } = useAuth()
 const { toast }           = useToast()
 
 const tab          = ref('login')
@@ -133,6 +135,14 @@ async function hacerLogin() {
   try {
     await login(loginForm.username, loginForm.password)
     toast('¡Bienvenido!')
+    // Redirigir según el rol después de login exitoso
+    setTimeout(() => {
+      if (esPaciente.value) {
+        router.push('/portal')
+      } else {
+        router.push('/citas')
+      }
+    }, 500)
   } catch (e) {
     errorLogin.value = e?.message || 'Usuario o contraseña incorrectos'
   } finally {
@@ -181,6 +191,10 @@ async function hacerRegistro() {
       correoElectronico:  regForm.correo      || null,
     })
     toast('¡Cuenta creada! Bienvenido.')
+    // Redirigir a portal del paciente después de registro exitoso
+    setTimeout(() => {
+      router.push('/portal')
+    }, 500)
   } catch (e) {
     if (Array.isArray(e?.fieldErrors) && e.fieldErrors.length) {
       const fieldMap = {

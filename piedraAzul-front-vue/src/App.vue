@@ -1,9 +1,9 @@
 <template>
-  <!-- ── SIN SESIÓN: login ── -->
-  <LoginView v-if="!sesionActiva" />
+  <!-- ── RUTAS PÚBLICAS (Home y Login) ── -->
+  <router-view v-if="esRutaPublica" />
 
   <!-- ── PACIENTE: solo portal ── -->
-  <template v-else-if="esPaciente">
+  <template v-else-if="sesionActiva && esPaciente">
     <AppTopbar />
     <main class="contenido">
       <PortalPaciente />
@@ -11,7 +11,7 @@
   </template>
 
   <!-- ── ADMIN / AGENDADOR / MÉDICO: app completa ── -->
-  <template v-else>
+  <template v-else-if="sesionActiva && !esPaciente">
     <AppTopbar />
     <AppNavTabs :activo="seccion" :tabs="tabsFiltradas" @cambiar="seccion = $event" />
     <main class="contenido">
@@ -26,11 +26,17 @@
     />
   </template>
 
+  <!-- ── Si no hay sesión, mostrar login ── -->
+  <template v-else>
+    <router-view />
+  </template>
+
   <AppToast />
 </template>
 
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import AppTopbar      from './components/organisms/AppTopbar.vue'
 import AppNavTabs     from './components/organisms/AppNavTabs.vue'
 import AppToast       from './components/organisms/AppToast.vue'
@@ -43,12 +49,21 @@ import Configuracion  from './views/Configuracion.vue'
 import { useMedicos } from './composables/useMedicos.js'
 import { useAuth }    from './composables/useAuth.js'
 
+const route = useRoute()
+const router = useRouter()
 const { cargarMedicos } = useMedicos()
 const { sesionActiva, esPaciente, usuario } = useAuth()
 
 const seccion      = ref('listar')
 const modalVisible = ref(false)
 const listarRef    = ref(null)
+
+// Rutas que son públicas (no requieren autenticación)
+const rutasPublicas = ['Home', 'Login']
+
+const esRutaPublica = computed(() => {
+  return rutasPublicas.includes(route.name) && !sesionActiva.value
+})
 
 const TODAS_LAS_TABS = [
   {
@@ -72,14 +87,30 @@ const tabsFiltradas = computed(() => {
 })
 
 // Cuando cambia el usuario o las tabs, asegurar que la sección activa sea válida
-watch(tabsFiltradas, (tabs) => {
-  if (tabs.length && !tabs.find(t => t.id === seccion.value)) {
-    seccion.value = tabs[0].id
+watch(sesionActiva, (activa) => {
+  if (activa) {
+    cargarMedicos()
+    // Si el usuario tiene sesión, redirigir desde login/home a su zona correspondiente
+    if (route.name === 'Login' || route.name === 'Home') {
+      if (esPaciente.value) {
+        router.push('/portal')
+      } else {
+        router.push('/citas')
+      }
+    }
+  } else {
+    // Si pierde la sesión, redirigir a login
+    if (route.meta?.requiresAuth) {
+      router.push('/login')
+    }
   }
 })
 
-watch(sesionActiva, (activa) => {
-  if (activa && !esPaciente.value) cargarMedicos()
+watch(() => route.name, (newRouteName) => {
+  // Si intenta acceder a ruta protegida sin sesión, redirigir a login
+  if (route.meta?.requiresAuth && !sesionActiva.value) {
+    router.push('/login')
+  }
 })
 
 async function onCitaCreada({ medicoId, fecha }) {
