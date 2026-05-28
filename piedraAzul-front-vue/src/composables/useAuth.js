@@ -3,10 +3,30 @@
    Autenticación delegada a Keycloak
 ═══════════════════════════════════════════ */
 
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 
-const usuario = ref(null)
+// Helper para obtener usuario de localStorage
+function obtenerUsuarioGuardado() {
+  try {
+    const guardado = localStorage.getItem('usuario')
+    return guardado ? JSON.parse(guardado) : null
+  } catch {
+    return null
+  }
+}
+
+// Crear el ref con el usuario guardado
+const usuario = ref(obtenerUsuarioGuardado())
 // usuario tiene forma: { token, username, rol, nombres, apellidos }
+
+// Watcher para guardar cambios en localStorage
+watch(usuario, (nuevoUsuario) => {
+  if (nuevoUsuario) {
+    localStorage.setItem('usuario', JSON.stringify(nuevoUsuario))
+  } else {
+    localStorage.removeItem('usuario')
+  }
+}, { deep: true })
 
 const sesionActiva = computed(() => !!usuario.value)
 const esPaciente = computed(() => usuario.value?.rol === 'PACIENTE')
@@ -117,6 +137,7 @@ export function useAuth() {
 
   function cerrarSesion() {
     usuario.value = null
+    localStorage.removeItem('usuario')
   }
 
   const avatarLetra = computed(() => {

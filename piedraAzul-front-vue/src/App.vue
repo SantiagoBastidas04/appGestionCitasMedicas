@@ -6,7 +6,7 @@
   <template v-else-if="sesionActiva && esPaciente">
     <AppTopbar />
     <main class="contenido">
-      <PortalPaciente />
+      <router-view />
     </main>
   </template>
 
@@ -44,7 +44,6 @@ import ModalMedico    from './components/organisms/ModalMedico.vue'
 import LoginView      from './views/LoginView.vue'
 import ListarCitas    from './views/ListarCitas.vue'
 import CrearCita      from './views/CrearCita.vue'
-import PortalPaciente from './views/PortalPaciente.vue'
 import Configuracion  from './views/Configuracion.vue'
 import { useMedicos } from './composables/useMedicos.js'
 import { useAuth }    from './composables/useAuth.js'

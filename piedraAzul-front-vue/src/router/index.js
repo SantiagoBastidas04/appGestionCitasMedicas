@@ -5,6 +5,7 @@ import PortalPaciente from '../views/PortalPaciente.vue'
 import ListarCitas from '../views/ListarCitas.vue'
 import CrearCita from '../views/CrearCita.vue'
 import Configuracion from '../views/Configuracion.vue'
+import MisCitas from '../views/MisCitas.vue'
 
 const routes = [
     {
@@ -42,6 +43,12 @@ const routes = [
         name: 'Configuracion',
         component: Configuracion,
         meta: { requiresAuth: true }
+    },
+    {
+        path: '/mis-citas',
+        name: 'MisCitas',
+        component: MisCitas,
+        meta: { requiresAuth: true }
     }
 ]
 
@@ -55,6 +62,20 @@ const router = createRouter({
             return { top: 0 }
         }
     }
+})
+
+// Guard para redirigir pacientes logueados a /portal cuando intenten acceder a /
+router.beforeEach((to, from, next) => {
+    const usuarioGuardado = localStorage.getItem('usuario')
+    if (usuarioGuardado) {
+        const usuario = JSON.parse(usuarioGuardado)
+        // Si es paciente y está en la raíz, redirigir a /portal
+        if (usuario.rol === 'PACIENTE' && to.path === '/') {
+            next('/portal')
+            return
+        }
+    }
+    next()
 })
 
 export default router

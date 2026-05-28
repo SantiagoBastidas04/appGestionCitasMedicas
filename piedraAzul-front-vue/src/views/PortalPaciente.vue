@@ -103,6 +103,16 @@
         </svg>
       </template>
 
+      <div class="boton-mobil" style="margin-bottom: 1.5rem;">
+        <AppButton @click="irAMisCitas" variante="contorno" style="gap: 0.5rem;">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24">
+            <rect x="2" y="3" width="20" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M2 9h20" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+          Ver citas en dispositivo móvil
+        </AppButton>
+      </div>
+
       <div v-if="cargandoCitas" class="estado-centro">
         <AppSpinner :verde="true" :size="28" />
         <p>Cargando sus citas...</p>
@@ -141,7 +151,8 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted, watch } from 'vue'
+import { useRouter } from 'vue-router'
 import AppCard        from '../components/molecules/AppCard.vue'
 import AppCampo       from '../components/atoms/AppCampo.vue'
 import AppButton      from '../components/atoms/AppButton.vue'
@@ -154,8 +165,16 @@ import { useAuth }   from '../composables/useAuth.js'
 import { useToast }  from '../composables/useToast.js'
 import { medicoService, citaService, pacienteService } from '../services/api.js'
 
-const { usuario, nombreCompleto } = useAuth()
+const router = useRouter()
+const { usuario, sesionActiva, nombreCompleto } = useAuth()
 const { toast } = useToast()
+
+// Watcher para redirigir al login cuando se cierre la sesión
+watch(sesionActiva, (activa) => {
+  if (!activa) {
+    router.push('/login')
+  }
+})
 
 const hoy = () => new Date().toISOString().split('T')[0]
 
@@ -239,6 +258,12 @@ async function confirmarCita() {
 }
 
 async function cargarMisCitas() {
+  // Protección: si no hay usuario, no intentar cargar
+  if (!usuario.value) {
+    router.push('/login')
+    return
+  }
+  
   if (!pacienteId.value) return
   cargandoCitas.value = true
   try {
@@ -269,6 +294,10 @@ function formatFecha(fecha) {
   if (!fecha) return ''
   return new Date(fecha + 'T00:00:00')
     .toLocaleDateString('es-CO', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })
+}
+
+function irAMisCitas() {
+  router.push('/mis-citas')
 }
 
 onMounted(async () => {
