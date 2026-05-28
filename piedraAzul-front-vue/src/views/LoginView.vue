@@ -2,14 +2,21 @@
   <div class="login-fondo">
     <div class="login-card">
 
-      <!-- Logo -->
-      <div class="login-logo">
-        <svg width="26" height="26" fill="none" viewBox="0 0 24 24">
-          <path d="M12 2C8 2 4 5.5 4 10c0 6 8 12 8 12s8-6 8-12c0-4.5-4-8-8-8z"
-                stroke="#0D6B4E" stroke-width="1.5" fill="none"/>
-          <circle cx="12" cy="10" r="2.5" stroke="#0D6B4E" stroke-width="1.5" fill="none"/>
-        </svg>
-      </div>
+      <!-- Botón Volver al Inicio -->
+      <router-link to="/" class="btn-volver">
+        ← Volver al inicio
+      </router-link>
+
+      <!-- Logo clickeable para volver a Home -->
+      <router-link to="/" class="login-logo-link">
+        <div class="login-logo">
+          <svg width="26" height="26" fill="none" viewBox="0 0 24 24">
+            <path d="M12 2C8 2 4 5.5 4 10c0 6 8 12 8 12s8-6 8-12c0-4.5-4-8-8-8z"
+                  stroke="#0D6B4E" stroke-width="1.5" fill="none"/>
+            <circle cx="12" cy="10" r="2.5" stroke="#0D6B4E" stroke-width="1.5" fill="none"/>
+          </svg>
+        </div>
+      </router-link>
 
       <h1>Piedrazul</h1>
       <p class="login-sub">Sistema de agendamiento médico</p>
@@ -236,7 +243,32 @@ async function hacerRegistro() {
   box-shadow: 0 8px 40px rgba(13,107,78,.10);
 }
 
+/* Botón Volver */
+.btn-volver {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--verde);
+  font-weight: 500;
+  text-decoration: none;
+  margin-bottom: 20px;
+  transition: color var(--trans);
+}
+
+.btn-volver:hover {
+  color: var(--verde-oscuro);
+  text-decoration: underline;
+}
+
 /* Logo */
+.login-logo-link {
+  display: flex;
+  justify-content: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
 .login-logo {
   width: 52px; height: 52px;
   background: var(--verde-claro);
@@ -244,6 +276,12 @@ async function hacerRegistro() {
   display: flex; align-items: center; justify-content: center;
   margin: 0 auto 16px;
   border: 1.5px solid var(--verde-borde);
+  transition: transform var(--trans), background var(--trans);
+}
+
+.login-logo-link:hover .login-logo {
+  transform: scale(1.08);
+  background: var(--verde);
 }
 
 .login-card h1 {
