@@ -11,12 +11,20 @@
         </svg>
         <span>Piedrazul</span>
       </div>
-      <button class="btn-salir" @click="salir">
-        <svg width="16" height="16" fill="none" viewBox="0 0 24 24">
-          <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        Salir
-      </button>
+      <div class="topbar-botones">
+        <button class="btn-volver" @click="volverAlPortal">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24">
+            <path d="M19 12H5M12 19l-7-7 7-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Volver
+        </button>
+        <button class="btn-salir" @click="salir">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24">
+            <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Salir
+        </button>
+      </div>
     </div>
 
     <!-- Bienvenida -->
@@ -162,6 +170,10 @@ async function cargar() {
   }
 }
 
+function volverAlPortal() {
+  router.push('/portal')
+}
+
 function salir() {
   cerrarSesion()
 }
@@ -213,6 +225,25 @@ onMounted(cargar)
   font-size: 18px;
   color: var(--verde-oscuro);
 }
+.topbar-botones {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-volver {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--texto-suave);
+  background: none;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-volver:hover { color: var(--verde-oscuro); border-color: var(--verde-borde); }
 .btn-salir {
   display: flex;
   align-items: center;
